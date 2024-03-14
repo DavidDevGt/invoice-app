@@ -20,7 +20,7 @@
                         <label for="username">Usuario</label>
                         <input type="text" class="form-control" id="username" name="username" required>
                     </div>
-                    <div class="form-group position-relative">
+                    <div class="form-group position-relative mt-3">
                         <label for="password">Contraseña</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                         <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
