@@ -17,7 +17,7 @@
     <main class="container">
         <div class="row justify-content-center">
             <div class="col-md-4 login-container">
-                <h1 class="text-center mb-4">RRHH Adminer</h1>
+                <h1 class="text-center mb-4">InvoiceApp</h1>
                 <form id="loginForm">
                     <div class="form-group">
                         <label class="mb-2" for="username">Usuario</label>

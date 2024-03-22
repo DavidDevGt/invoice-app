@@ -12,8 +12,8 @@ CREATE TABLE roles (
 
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
+    nombre_usuario VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     rol_id INT,
     active BOOLEAN DEFAULT TRUE,

@@ -42,6 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
         passwordField.setAttribute('type', type);
         // toggle the eye / eye slash icon
         this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
+        this.classList.toggle('fa-eye-slash'); 
     });
 });
