@@ -10,10 +10,15 @@ CREATE TABLE roles (
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+INSERT INTO roles (nombre, descripcion) VALUES ('ADMIN', 'Rol de administrador con acceso total');
+INSERT INTO roles (nombre, descripcion) VALUES ('GERENCIA', 'Rol para gerentes y directivos');
+INSERT INTO roles (nombre, descripcion) VALUES ('OFICINA', 'Rol para personal administrativo de oficina');
+INSERT INTO roles (nombre, descripcion) VALUES ('SALA VENTAS', 'Rol para personal de ventas en sala');
+INSERT INTO roles (nombre, descripcion) VALUES ('BODEGA', 'Rol para personal encargado de bodega');
+
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
+    usuario VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     rol_id INT,
     active BOOLEAN DEFAULT TRUE,
