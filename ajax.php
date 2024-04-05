@@ -7,7 +7,7 @@ session_start();
 include './src/config/db.php';
 
 if (isset($_SESSION['usuario_id'])) {
-    header('Location: modules/dashboard.php');
+    header('Location: src/modules/dashboard.php');
     exit;
 }
 
