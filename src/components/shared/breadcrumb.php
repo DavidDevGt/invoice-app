@@ -1,32 +1,81 @@
 <?php
-require_once __DIR__ . '/../../../config/db_functions.php';
+require_once __DIR__ . '/../../config/db_functions.php';
 
-function getFolderHierarchy($path = '') {
-    $folders = explode('/', trim($path, '/'));
-    $hierarchy = [];
-    $accumulatedPath = '';
-    foreach ($folders as $folder) {
-        $accumulatedPath .= $folder . '/';
+function getFolderHierarchyFromURI($base = '/src/modules/')
+{
+    $uri = $_SERVER['REQUEST_URI'];
+    $position = strpos($uri, $base);
+
+    if ($position !== false) {
+        $path = substr($uri, $position + strlen($base));
+        $path = trim($path, '/');
+        $folders = explode('/', $path);
+        $hierarchy = [];
+        $accumulatedPath = '/';
+
         $hierarchy[] = [
-            'nombre' => $folder,
-            'link' => '/' . trim($accumulatedPath, '/')
+            'nombre' => 'Sistema',
+            'link' => '/src/modules/'
         ];
+
+        foreach ($folders as $index => $folder) {
+            if ($index === count($folders) - 1 && strpos($folder, '.php') !== false) {
+                break;
+            }
+            $accumulatedPath .= $folder . '/';
+            $hierarchy[] = [
+                'nombre' => $folder,
+                'link' => $accumulatedPath
+            ];
+        }
+        return $hierarchy;
     }
-    return $hierarchy;
+
+    return [];
 }
 
-// Asumimos que `path` es un parámetro GET que representa la ruta actual dentro de la estructura de carpetas de la aplicación
-$currentPath = $_GET['path'] ?? '';
+$hierarchy = getFolderHierarchyFromURI();
 
-// Obtener la jerarquía de carpetas basada en la ruta actual
-$hierarchy = getFolderHierarchy($currentPath);
 ?>
 
 <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/">Inicio</a></li>
-    <?php foreach ($hierarchy as $item): ?>
-        <li class="breadcrumb-item">
-            <a href="<?= htmlspecialchars($item['link']) ?>"><?= htmlspecialchars($item['nombre']) ?></a>
-        </li>
+    <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Inicio</a></li>
+    <?php foreach ($hierarchy as $index => $item) : ?>
+        <?php
+        $nombre_modulo = ucwords($item['nombre']);
+        ?>
+        <?php if ($index === count($hierarchy) - 1) : ?>
+            <li class="breadcrumb-item active"><?= htmlspecialchars($nombre_modulo) ?></li>
+        <?php else : ?>
+            <li class="breadcrumb-item module_name"><a href="#" class="text-decoration-none"><?= htmlspecialchars($nombre_modulo) ?></a></li>
+        <?php endif; ?>
     <?php endforeach; ?>
 </ol>
+
+<style>
+    .breadcrumb {
+        padding: 1rem 1.5rem;
+        margin-bottom: 20px;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+    }
+
+    .breadcrumb-item {
+        display: inline-block;
+    }
+
+    .breadcrumb-item a {
+        color: #0275d8;
+        text-decoration: none;
+    }
+
+    .breadcrumb-item.active span {
+        color: #6c757d;
+    }
+
+    .breadcrumb-item+.breadcrumb-item::before {
+        content: ">";
+        padding: 0 5px;
+        color: #6c757d;
+    }
+</style>

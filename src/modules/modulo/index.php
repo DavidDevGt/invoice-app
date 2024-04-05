@@ -6,10 +6,16 @@ require_once './../../components/header/default.php';
 ?>
 
 <body class="bg-body-secondary">
+
+
+<?php require_once './../../components/shared/navbar.php'; ?>
+
+
     <div>
         <div class="row mt-3 m-4">
             <div class="col-3 mt-2 pt-3">
                 <!-- Breadcrumb deberia ir aca -->
+                <?php require_once './../../components/shared/breadcrumb.php'; ?>
             </div>
             <div class="col-6 mt-2 pt-3 text-center"></div>
             <div class="col-3 mt-2 pt-3 text-end">
