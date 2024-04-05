@@ -28,7 +28,7 @@ if (isset($_SESSION['usuario'])) {
             <div class="wrap-login100">
                 <div class="login100-form-title" style="background-image: url(./src/assets/img/bg-login.jpg); background-position: center top; background-size: cover;">
                     <span class="login100-form-title-1">
-                        LOGIN
+                        FERRETERIA SHAMA
                     </span>
                 </div>
 
