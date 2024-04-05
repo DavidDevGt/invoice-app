@@ -11,41 +11,39 @@
 </head>
 
 <body>
-<main class="container">
-        <div class="row justify-content-center">
-            <div class="login-container">
-                <!-- Contenido del contenedor -->
-                <div class="d-flex w-100 bg-white p-5 rounded shadow-lg justify-content-between">
-                    <!-- Logotipo y texto a la izquierda -->
-                    <div class="d-flex flex-column justify-content-center align-items-center w-50">
-                        <img src="https://fshama.netlify.app/media/logo%201.svg" alt="Logo InvoiceApp" style="max-width: 100px;">
-                        <h2 class="text-center mt-3">InvoiceApp</h2>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <div class="login100-form-title" style="background-image: url(./src/assets/img/bg-login.jpg); background-position: center top; background-size: cover;">
+                    <span class="login100-form-title-1">
+                        LOGIN
+                    </span>
+                </div>
+
+                <div class="login100-form mt-3">
+                    <div class="wrap-input100 mb-3">
+                        <span class="label-input100">Usuario</span>
+                        <input class="input100" type="text" id="username" placeholder="Ingrese su usuario">
+                        <span class="focus-input100"></span>
                     </div>
-                    <!-- Formulario de inicio de sesión a la derecha -->
-                    <div class="w-50">
-                        <h3 class="mb-4">Inicio de Sesión</h3>
-                        <form id="loginForm" action="procesar_login.php" method="POST">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Usuario</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                    <input type="text" class="form-control" id="username" name="username" placeholder="Ingresa tu nombre de usuario" required="">
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Contraseña</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu contraseña" required="">
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-warning btn-block">Ingresar</button>
-                        </form>
+
+                    <div class="wrap-input100 mb-5">
+                        <span class="label-input100">Contraseña</span>
+                        <input class="input100" type="password" id="password" placeholder="Ingrese su contraseña">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn" id="btn_login">
+                            Iniciar Sesión
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+
+
 
     <script src="./src/include/jquery/jquery-4.0.0-beta.min.js"></script>
     <script src="app.js"></script>

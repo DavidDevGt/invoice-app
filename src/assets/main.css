@@ -1,0 +1,44 @@
+/* Definición de fuentes */
+@font-face {
+    font-family: 'Poppins-Regular';
+    src: url('./../assets/fonts/poppins/Poppins-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Poppins-Medium';
+    src: url('./../assets/fonts/poppins/Poppins-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Poppins-Bold';
+    src: url('./../assets/fonts/poppins/Poppins-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Poppins-SemiBold';
+    src: url('./../assets/fonts/poppins/Poppins-SemiBold.ttf');
+}
+
+body, html {
+    font-family: 'Poppins-Regular', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins-SemiBold';
+}
+
+.btn {
+    font-family: 'Poppins-Medium';
+    letter-spacing: 0.5px;
+}
+
+.form-control {
+    font-family: 'Poppins-Regular';
+}
+
+/* Responsividad y espaciado */
+@media (max-width: 768px) {
+    .responsive-text {
+        font-size: 14px;
+    }
+}

@@ -1,6 +1,7 @@
 $(document).ready(function () {
-    $("#loginForm").submit(function (e) {
-        e.preventDefault();
+    // Cambiamos el selector a clase del botón ya que no estamos usando un formulario
+    $("#btn_login").click(function (e) {
+        e.preventDefault(); // Evita el comportamiento por defecto del botón
 
         var dataObj = {
             username: $("#username").val(),
