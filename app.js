@@ -16,7 +16,7 @@ $(document).ready(function () {
             dataType: "json",
             success: function (data) {
                 if (data.success) {
-                    window.location.href = "modules/dashboard.php";
+                    window.location.href = "src/modules/dashboard.php";
                 } else {
                     Swal.fire({
                         icon: "error",
