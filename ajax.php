@@ -18,7 +18,7 @@ if (isset($_POST['fnc']) && $_POST['fnc'] == "login") {
     if ($usuario !== '' && $password !== '') {
         $conn = getDbConnection();
 
-        $stmt = $conn->prepare("SELECT id, usuario, rol_id FROM usuarios WHERE usuario = ? AND active = 1");
+        $stmt = $conn->prepare("SELECT id, password, usuario, rol_id FROM usuarios WHERE usuario = ? AND active = 1");
         $stmt->bind_param("s", $usuario);
         $stmt->execute();
         $result = $stmt->get_result();
