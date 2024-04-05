@@ -1,13 +1,13 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 session_start();
 include './src/config/db.php';
 
 if (isset($_SESSION['usuario_id'])) {
-    header('Location: src/modules/dashboard.php');
+    header('Location: src/modules/dashboard/dashboard.php');
     exit;
 }
 
