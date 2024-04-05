@@ -110,11 +110,12 @@
 </style>
 
 <script>
+    const LARGO_CARACTER = 35;
     document.addEventListener("DOMContentLoaded", function() {
         var notifications = document.querySelectorAll(".dropdown-notifications .dropdown-item");
         notifications.forEach(function(item) {
-            if (item.textContent.length > 35) {
-                item.textContent = item.textContent.substring(0, 35) + "...";
+            if (item.textContent.length > LARGO_CARACTER) {
+                item.textContent = item.textContent.substring(0, LARGO_CARACTER) + "...";
             }
         });
     });
