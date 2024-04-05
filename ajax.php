@@ -9,7 +9,7 @@ if (isset($_SESSION['usuario_id'])) {
 }
 
 if (isset($_POST['fnc']) && $_POST['fnc'] == "login") {
-    $usuario = $_POST['usuario'] ?? '';
+    $usuario = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
     if ($usuario !== '' && $password !== '') {

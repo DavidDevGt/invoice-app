@@ -1,47 +1,48 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('loginForm');
-
-    loginForm.addEventListener('submit', function(e) {
+$(document).ready(function () {
+    $("#loginForm").submit(function (e) {
         e.preventDefault();
 
-        const formData = new FormData(loginForm);
-        formData.append('fnc', 'login');
+        var dataObj = {
+            username: $("#username").val(),
+            password: $("#password").val(),
+            fnc: "login",
+        };
 
-        fetch('ajax.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.location.href = 'modules/dashboard.php';
-            } else {
+        $.ajax({
+            url: "ajax.php",
+            type: "POST",
+            data: dataObj,
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    window.location.href = "modules/dashboard.php";
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "Usuario o contraseña incorrectos.",
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Usuario o contraseña incorrectos.'
+                    icon: "error",
+                    title: "Error",
+                    text: "Ocurrió un error al intentar iniciar sesión.",
                 });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Ocurrió un error al intentar iniciar sesión.'
-            });
+            },
         });
     });
 
-    const togglePassword = document.querySelector('.toggle-password');
-    const passwordField = document.getElementById('password');
-
-    togglePassword.addEventListener('click', function (e) {
-        // toggle the type attribute
-        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordField.setAttribute('type', type);
-        // toggle the eye / eye slash icon
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash'); 
+    $(document).on("click", ".toggle-password", function () {
+        let input = $("#password");
+        if (input.attr("type") === "password") {
+            input.attr("type", "text");
+            $(this).toggleClass("fa-eye fa-eye-slash");
+        } else {
+            input.attr("type", "password");
+            $(this).toggleClass("fa-eye-slash fa-eye");
+        }
     });
 });
