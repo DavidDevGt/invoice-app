@@ -18,6 +18,7 @@ INSERT INTO roles (nombre, descripcion) VALUES ('BODEGA', 'Rol para personal enc
 
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo VARCHAR(5) NOT NULL,
     usuario VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     rol_id INT,
@@ -30,6 +31,7 @@ CREATE TABLE permisos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     module_id INT,
+    usuario_id INT NOT NULL,
     escritura BOOLEAN DEFAULT FALSE,
     lectura BOOLEAN DEFAULT FALSE,
     active BOOLEAN DEFAULT TRUE,
@@ -175,10 +177,8 @@ CREATE TABLE precios (
 CREATE TABLE modulos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(45) NOT NULL,
-    link VARCHAR(100),
     orden INT DEFAULT 0,
-    padre INT NOT NULL,
-    hijo INT NOT NULL,
+    padre_id INT,
     ruta VARCHAR(200) NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -248,7 +248,7 @@ CREATE TABLE bitacora_movimientos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     movimiento_id INT NOT NULL,
     usuario_id INT NOT NULL,
-    tipo VARCHAR(50) NOT NULL, -- Ejemplo: 'CREACION', 'ACTUALIZACION', 'ELIMINACION'
+    tipo VARCHAR(50) NOT NULL, -- Ejemplo: 'CREACION', 'ACTUALIZACION'
     descripcion TEXT,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (movimiento_id) REFERENCES movimientos(id),
@@ -259,7 +259,7 @@ CREATE TABLE bitacora_facturas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     factura_id INT NOT NULL,
     usuario_id INT NOT NULL,
-    tipo VARCHAR(50) NOT NULL, -- Ejemplo: 'CREACION', 'MODIFICACION', 'ANULACION'
+    tipo VARCHAR(50) NOT NULL, -- Ejemplo: 'CREACION', 'ANULACION'
     descripcion TEXT,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (factura_id) REFERENCES facturas(id),
@@ -278,47 +278,7 @@ END$$
 DELIMITER ;
 
 
-DELIMITER $$
-CREATE PROCEDURE CrearRol(IN _nombre VARCHAR(255), IN _descripcion VARCHAR(255))
-BEGIN
-    INSERT INTO roles(nombre, descripcion) VALUES (_nombre, _descripcion);
-END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE PROCEDURE ActualizarRol(IN _id INT, IN _nombre VARCHAR(255), IN _descripcion VARCHAR(255), IN _active BOOLEAN)
-BEGIN
-    UPDATE roles SET nombre = _nombre, descripcion = _descripcion, active = _active WHERE id = _id;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE EliminarRol(IN _id INT)
-BEGIN
-    UPDATE roles SET active = FALSE WHERE id = _id;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE AsignarPermisoRol(IN _rol_id INT, IN _module_id INT, IN _escritura BOOLEAN, IN _lectura BOOLEAN)
-BEGIN
-    INSERT INTO permisos(rol_id, module_id, escritura, lectura) VALUES (_rol_id, _module_id, _escritura, _lectura);
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE ActualizarPermisoRol(IN _id INT, IN _rol_id INT, IN _module_id INT, IN _escritura BOOLEAN, IN _lectura BOOLEAN, IN _active BOOLEAN)
-BEGIN
-    UPDATE permisos SET rol_id = _rol_id, module_id = _module_id, escritura = _escritura, lectura = _lectura, active = _active WHERE id = _id;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE EliminarPermisoRol(IN _id INT)
-BEGIN
-    UPDATE permisos SET active = FALSE WHERE id = _id;
-END$$
-DELIMITER ; 
 
 # Triggers
 

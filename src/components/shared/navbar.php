@@ -43,8 +43,8 @@
 
             <!-- Notifications -->
             <div class="dropdown">
-                <a class="link-secondary me-3 dropdown-toggle hidden-arrow" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-bell"></i>
+                <a class="link-secondary me-3 hidden-arrow" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bell text-white dropdown-toggle"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-notifications" aria-labelledby="navbarDropdownMenuLink">
                     <li><a class="dropdown-item" href="#">Pedido No. 3005 retenido por X días</a>
@@ -79,7 +79,7 @@
 
             <!-- Avatar -->
             <div class="dropdown">
-                <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="dropdown-toggle d-flex text-white align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="https://picsum.photos/200" class="rounded-circle" height="25" alt="Retrato en blanco y negro de un hombre" loading="lazy">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">

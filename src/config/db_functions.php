@@ -2,7 +2,8 @@
 include 'db.php';
 
 // Ejecuta una consulta y devuelve el resultado
-function dbQuery($sql) {
+function dbQuery($sql)
+{
     $conn = getDbConnection();
     $result = $conn->query($sql);
     $conn->close();
@@ -10,7 +11,8 @@ function dbQuery($sql) {
 }
 
 // Inserta datos y devuelve el ID del último registro insertado
-function dbQueryInsert($sql) {
+function dbQueryInsert($sql)
+{
     $conn = getDbConnection();
     $conn->query($sql);
     $lastId = $conn->insert_id;
@@ -18,29 +20,30 @@ function dbQueryInsert($sql) {
     return $lastId;
 }
 
-// Obtiene todos los registros como un array de arrays
-function dbFetchAll($sql) {
-    $conn = getDbConnection();
-    $result = $conn->query($sql);
-    $fetchAll = $result->fetch_all(MYSQLI_ASSOC);
-    $conn->close();
-    return $fetchAll;
+function dbFetchAssoc($result)
+{
+    $return = mysqli_fetch_assoc($result);
+    return $return;
 }
 
-// Obtiene un solo registro como un array asociativo
-function dbFetchAssoc($sql) {
-    $conn = getDbConnection();
-    $result = $conn->query($sql);
-    $fetchAssoc = $result->fetch_assoc();
-    $conn->close();
-    return $fetchAssoc;
+function dbNumRows($result)
+{
+    return mysqli_num_rows($result);
 }
 
-// Devuelve el número de filas afectadas por la última consulta
-function dbNumRows($sql) {
-    $conn = getDbConnection();
-    $result = $conn->query($sql);
-    $numRows = $result->num_rows;
-    $conn->close();
-    return $numRows;
+
+// Limpiar data
+function sanitizeInput($data)
+{
+    if (is_array($data)) {
+        foreach ($data as $key => $value) {
+            $data[$key] = sanitizeInput($value);
+        }
+        return $data;
+    } else {
+        $data = trim($data);
+        $data = strip_tags($data);
+        $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+        return $data;
+    }
 }
