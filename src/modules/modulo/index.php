@@ -8,7 +8,7 @@ require_once './../../components/header/default.php';
 <body class="bg-body-secondary">
 
 
-<?php require_once './../../components/shared/navbar.php'; ?>
+    <?php require_once './../../components/shared/navbar.php'; ?>
 
 
     <div>
@@ -40,11 +40,10 @@ require_once './../../components/header/default.php';
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="tbody_">
+                <tbody id="tbody_modulos">
                 </tbody>
             </table>
         </div>
-
     </div>
 </body>
 <?php
