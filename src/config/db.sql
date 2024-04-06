@@ -277,7 +277,31 @@ END$$
 
 DELIMITER ;
 
+DELIMITER $$
 
+CREATE PROCEDURE RegisterUsuario(
+    IN _codigo VARCHAR(5), 
+    IN _usuario VARCHAR(255), 
+    IN _password VARCHAR(255), 
+    IN _rol_id INT
+)
+BEGIN
+    DECLARE _usuarioExists INT;
+    
+    SELECT COUNT(*)
+    INTO _usuarioExists
+    FROM usuarios
+    WHERE usuario = _usuario;
+    
+    IF _usuarioExists = 0 THEN
+        INSERT INTO usuarios(codigo, usuario, password, rol_id)
+        VALUES (_codigo, _usuario, _password, _rol_id);
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El nombre de usuario ya existe.';
+    END IF;
+END$$
+
+DELIMITER ;
 
 
 # Triggers
