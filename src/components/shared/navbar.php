@@ -117,13 +117,23 @@
 </style>
 
 <script>
-    const LARGO_CARACTER = 35;
-    document.addEventListener("DOMContentLoaded", function() {
-        var notifications = document.querySelectorAll(".dropdown-notifications .dropdown-item");
-        notifications.forEach(function(item) {
-            if (item.textContent.length > LARGO_CARACTER) {
-                item.textContent = item.textContent.substring(0, LARGO_CARACTER) + "...";
+document.addEventListener("DOMContentLoaded", function() {
+    var dropdowns = document.querySelectorAll('.navbar .dropdown-toggle');
+    dropdowns.forEach(function(dropdown) {
+        dropdown.addEventListener('click', function(event) {
+            if (dropdown.getAttribute('href') === '#') {
+                event.preventDefault();
             }
         });
     });
+    
+    const LARGO_CARACTER = 35;
+    var notifications = document.querySelectorAll(".dropdown-notifications .dropdown-item");
+    notifications.forEach(function(item) {
+        if (item.textContent.length > LARGO_CARACTER) {
+            item.textContent = item.textContent.substring(0, LARGO_CARACTER) + "...";
+        }
+    });
+});
+
 </script>
