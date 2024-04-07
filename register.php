@@ -20,8 +20,8 @@ if (isset($usuario) && $usuario !== '' && isset($password) && $password !== '') 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     $conn = getDbConnection();
-    $stmt = $conn->prepare('INSERT INTO usuarios (usuario, password, active) VALUES (?, ?, TRUE)');
-    $stmt->bind_param('ss', $usuario, $hashedPassword);
+    $stmt = $conn->prepare('INSERT INTO usuarios (usuario, password, codigo, active) VALUES (?, ?, ?, TRUE)');
+    $stmt->bind_param('sss', $usuario, $hashedPassword, $codigo);
 
     if ($stmt->execute()) {
         echo "Usuario registrado\n";
