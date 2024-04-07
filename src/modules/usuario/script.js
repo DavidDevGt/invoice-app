@@ -4,11 +4,35 @@ $(document).ready(function () {
     $('#crearModulo').click(function () {
         mostrarModalCrearUsuario();
     });
-    mostrarUsuarios();
+});
+mostrarUsuarios();
+// Evento de teclado en el input de búsqueda
+$('#busqueda').keyup(function () {
+    let valorBusqueda = $(this).val();
+    mostrarUsuarios(valorBusqueda); // Pasar el término de búsqueda a la función
 });
 
-// Mostrar usuarios
-function mostrarUsuarios() {
+// Cargar los roles al abrir el modal de crear usuario
+function cargarRoles() {
+    console.log("Cargando roles..."); // Para depuración
+
+    $.ajax({
+        type: 'POST',
+        url: 'ajax.php',
+        data: { accion: "mostrar_roles" },
+        success: function (response) {
+            const roles = JSON.parse(response);
+            let opcionesRoles = '<option value="">Seleccione un rol</option>';
+            roles.forEach(rol => {
+                opcionesRoles += `<option value="${rol.id}">${rol.nombre}</option>`;
+            });
+            $('#create_rol_id').html(opcionesRoles); // Para el modal de crear usuario
+            $('#edit_rol_id').html(opcionesRoles); // Para el modal de editar usuario
+        }
+    });
+}
+
+function mostrarUsuarios(busqueda = '') {
     $.ajax({
         type: "POST",
         url: "ajax.php",
@@ -16,25 +40,36 @@ function mostrarUsuarios() {
         success: function (response) {
             let usuarios = JSON.parse(response);
             let filasUsuarios = '';
+            let resultadosEncontrados = false; // verificar si se encontraron resultados
+
             usuarios.forEach(usuario => {
-                filasUsuarios += `
-                    <tr>
-                        <td>${usuario.id}</td>
-                        <td>${usuario.codigo}</td>
-                        <td>${usuario.usuario}</td>
-                        <td>${usuario.nombre_rol}</td>
-                        <td>${usuario.active == 1 ? 'Activo' : 'Inactivo'}</td>
-                        <td>
-                            <button type="button" onclick="mostrarModalPermisos('${usuario.usuario}', ${usuario.id})" class="btn btn-sm btn-secondary">Gestionar Permisos</button>
-                            <button type="button" onclick="mostrarModalEditarUsuario(${usuario.id})" class="btn btn-sm btn-success">Editar</button>
-                        </td>
-                    </tr>
-                `;
+                if (usuario.usuario.includes(busqueda) || usuario.codigo.includes(busqueda)) {
+                    resultadosEncontrados = true; // Se encontraron resultados
+                    filasUsuarios += `
+                        <tr>
+                            <td>${usuario.id}</td>
+                            <td>${usuario.codigo}</td>
+                            <td>${usuario.usuario}</td>
+                            <td>${usuario.nombre_rol}</td>
+                            <td>${usuario.active == 1 ? 'Activo' : 'Inactivo'}</td>
+                            <td>
+                                <button type="button" onclick="mostrarModalPermisos('${usuario.usuario}', ${usuario.id})" class="btn btn-sm btn-secondary">Gestionar Permisos</button>
+                                <button type="button" onclick="mostrarModalEditarUsuario(${usuario.id})" class="btn btn-sm btn-success">Editar</button>
+                            </td>
+                        </tr>
+                    `;
+                }
             });
-            $('#tablebody').html(filasUsuarios);
+
+            if (resultadosEncontrados) {
+                $('#tablebody').html(filasUsuarios); // Mostrar los resultados
+            } else {
+                $('#tablebody').html(`<tr><td colspan="6" class="text-center">No se encontraron resultados</td></tr>`);
+            }
         }
     });
 }
+
 
 function mostrarModalPermisos(usuario, id) {
     $('#exampleModal').modal('show');
@@ -86,7 +121,7 @@ function cargarSubmodulos(moduloPadreId, usuarioId) {
             data: { accion: 'mostrar_modulos_hijo', modulo_padre_id: moduloPadreId },
             success: function (submodulosResponse) {
                 const submodulos = JSON.parse(submodulosResponse);
-                let submodulosHtml = '';
+                let submodulosHtml = '<hr> ';
                 submodulos.forEach(submodulo => {
                     submodulosHtml += `
                         <div class="row align-items-center mb-2">
@@ -134,8 +169,8 @@ function seleccionarAmbos(submoduloId) {
 // Mostrar modal para crear un nuevo usuario
 function mostrarModalCrearUsuario() {
     $('#createModal').modal('show');
+    cargarRoles();
 }
-
 // Crear un nuevo usuario
 function crearUsuario() {
     let datos = {

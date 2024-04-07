@@ -56,115 +56,115 @@ require_once './../../components/header/default.php';
             </table>
             <!-- fin de tabla de datos -->
         </section>
+    </div>
 
-
-        <!-- Modal de permisos de usuario -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body border-0">
-                        <div class="modal-header border-0">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="bi bi-key-fill"></i> &nbsp; Permisos de <span id="usuario"></span></h1>
-                            <input type="hidden" id="usuario_select">
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <hr>
-                        <div class="accordion" id="accordionPermisos">
-                            <!-- Los módulos se cargarán aquí dinámicamente -->
-                        </div>
+    <!-- Modal de permisos de usuario -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body border-0">
+                    <div class="modal-header border-0">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="bi bi-key-fill"></i> &nbsp; Permisos de <span id="usuario"></span></h1>
+                        <input type="hidden" id="usuario_select">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <hr>
+                    <div class="accordion" id="accordionPermisos">
+                        <!-- Los módulos se cargarán aquí dinámicamente -->
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Modal de editar usuario -->
-        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel">Editar Usuario</h5>
+    <!-- Modal de editar usuario -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Editar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario de edición de usuario -->
+                    <form id="form_editar_usuario">
+                        <input type="hidden" id="edit_id"> <!-- ID oculto del usuario -->
+                        <div class="mb-3">
+                            <label for="edit_codigo" class="form-label">Código</label>
+                            <input type="text" class="form-control" id="edit_codigo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_usuario" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="edit_usuario">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_password" class="form-label">Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="edit_password">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_rol_id" class="form-label">Rol</label>
+                            <select class="form-select" id="edit_rol_id">
+                                <option value="">Seleciona un rol</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_active" class="form-label">Estado</label>
+                            <select class="form-select" id="edit_active">
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarCambiosUsuario()">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de crear usuario -->
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body border-0">
+                    <div class="modal-header border-0">
+                        <h1 class="modal-title fs-5" id="createModalLabel"><i class="bi bi-key-fill"></i> &nbsp; Agregar usuario <span id="usuario"></span></h1>
+                        <input type="hidden" id="usuario_select_edit">
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <!-- Formulario de edición de usuario -->
-                        <form id="form_editar_usuario">
-                            <input type="hidden" id="edit_id"> <!-- ID oculto del usuario -->
+                    <hr>
+                    <div class="formulario p-3" id="create_form">
+                        <form class="row row-cols-2">
                             <div class="mb-3">
-                                <label for="edit_codigo" class="form-label">Código</label>
-                                <input type="text" class="form-control" id="edit_codigo">
+                                <label for="usuario" class="form-label">Usuario</label>
+                                <input type="text" class="form-control" placeholder="Introduce el username" id="create_usuario" autocomplete="off" value="">
                             </div>
                             <div class="mb-3">
-                                <label for="edit_usuario" class="form-label">Usuario</label>
-                                <input type="text" class="form-control" id="edit_usuario">
+                                <label for="usuario" class="form-label">Código</label>
+                                <input type="text" class="form-control" id="create_codigo" placeholder="Introduce el código" value="">
                             </div>
                             <div class="mb-3">
-                                <label for="edit_password" class="form-label">Nueva Contraseña</label>
-                                <input type="password" class="form-control" id="edit_password">
+                                <label for="text" class="form-label">Contraseña</label>
+                                <input type="text" class="form-control" id="create_password" placeholder="Introduce la contraseña" value="">
                             </div>
                             <div class="mb-3">
-                                <label for="edit_rol_id" class="form-label">Rol</label>
-                                <select class="form-select" id="edit_rol_id">
-                                    <!-- Opciones de roles aquí -->
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit_active" class="form-label">Estado</label>
-                                <select class="form-select" id="edit_active">
-                                    <option value="1">Activo</option>
-                                    <option value="0">Inactivo</option>
+                                <label for="create_rol_id" class="form-label">Rol</label>
+                                <select class="form-control" name="create_rol_id" id="create_rol_id">
+                                    <option value="">Seleciona un rol</option>
                                 </select>
                             </div>
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary" onclick="guardarCambiosUsuario()">Guardar cambios</button>
+                        <div class="mb-3 mt-4">
+                            <button onclick="crearUsuario()" class="btn btn-success" id="create_save" type="button">Crear usuario</button>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Modal de crear usuario -->
-        <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-body border-0">
-                        <div class="modal-header border-0">
-                            <h1 class="modal-title fs-5" id="createModalLabel"><i class="bi bi-key-fill"></i> &nbsp; Agregar usuario <span id="usuario"></span></h1>
-                            <input type="hidden" id="usuario_select_edit">
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <hr>
-                        <div class="formulario p-3" id="create_form">
-                            <form class="row row-cols-2">
-                                <div class="mb-3">
-                                    <label for="usuario" class="form-label">Usuario</label>
-                                    <input type="text" class="form-control" id="create_usuario" autocomplete="off" value="">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="usuario" class="form-label">Código</label>
-                                    <input type="text" class="form-control" id="create_codigo" autocomplete="off" value="">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="password" class="form-label">Contraseña</label>
-                                    <input type="text" class="form-control" id="create_password" autocomplete="off" value="">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="rol" class="form-label">Rol</label>
-                                    <select onclick="mostrarRoles2()" class="form-control" name="rol" id="rol_2">
-                                        <option value="">Seleciona un rol</option>
-                                    </select>
-                                </div>
-                            </form>
-                            <div class="mb-3 mt-4">
-                                <button onclick="nuevo_usuario()" class="btn btn-success" id="create_save" type="submit">Crear usuario</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
 </body>
 <?php
 
