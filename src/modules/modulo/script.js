@@ -1,6 +1,43 @@
 "use strict";
 
+$(document).ready(function () {
+    cargarModulos();
+
+    $('#crearModulo').click(function () {
+        $('#modalCrearModulo').modal('show');
+    });
+
+    $(document).on('click', '.btn-editar-modulo', function () {
+        const id = $(this).closest('tr').data('id');
+        // Realiza la petición AJAX para obtener los datos del módulo seleccionado
+        $.ajax({
+            url: './ajax.php',
+            type: 'POST',
+            data: { accion: 'modulo_seleccionado', id: id },
+            success: function (response) {
+                const modulo = JSON.parse(response);
+                $('#nombreModuloEditar').val(modulo.nombre);
+                $('#ordenModuloEditar').val(modulo.orden);
+                $('#rutaModuloEditar').val(modulo.ruta);
+                $('select[name="activoModuloEditar"]').val(modulo.active);
+                $('#modalEditarModulo').modal('show');
+            },
+            error: function (xhr, status, error) {
+                console.error("Error al cargar el módulo: ", error);
+                alerta('error', 'Error al cargar el módulo', '');
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-eliminar-modulo', function () {
+        const id = $(this).closest('tr').data('id');
+        verificarYConfirmarEliminacion(id);
+    });
+});
+
 const tbody_modulos = $('#tbody_modulos');
+const form_crear_modulo = $('#formCrearModulo');
+const form_editar_modulo = $('#formEditarModulo');
 
 const cargarModulos = () => {
     $.ajax({
@@ -9,18 +46,20 @@ const cargarModulos = () => {
         data: { accion: 'leer' },
         success: function (response) {
             const modulos = JSON.parse(response);
+            tbody_modulos.empty(); // Limpiar la tabla
             modulos.forEach(modulo => {
-                $('#tbody_modulos').append(
-                    `<tr>
+                const activoClass = modulo.active == 1 ? 'verde-clarito' : 'rojo-clarito';
+                tbody_modulos.append(
+                    `<tr class="modulo_${modulo.id}" data-id="${modulo.id}">
                         <td>${modulo.nombre}</td>
                         <td class="text-center">${modulo.orden}</td>
                         <td>${modulo.padre_id || 'N/A'}</td>
                         <td>${modulo.ruta}</td>
-                        <td class="text-center">${modulo.active == 1 ? 'Sí' : 'No'}</td>
+                        <td class="text-center ${activoClass}">${modulo.active == 1 ? 'Sí' : 'No'}</td>
                         <td class="text-center">
-                            <button class="btn btn-success btn-sm"><i class="fa-solid fa-pencil"></i></button>
-                            <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
-                        </td> 
+                            <button class="btn btn-success btn-sm btn-editar-modulo"><i class="fa-solid fa-pencil"></i></button>
+                            <button class="btn btn-danger btn-sm btn-eliminar-modulo"><i class="fa-solid fa-trash"></i></button>
+                        </td>
                      </tr>`
                 );
             });
@@ -31,8 +70,101 @@ const cargarModulos = () => {
     });
 };
 
-const nombreFuncion = () => { };
+form_crear_modulo.submit(function (e) {
+    e.preventDefault();
+    const formData = $(this).serialize() + '&accion=crear';
 
-$(document).ready(function () {
-    cargarModulos();
+    $.ajax({
+        url: './ajax.php',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            const data = JSON.parse(response);
+            if (data.success) {
+                $('#modalCrearModulo').modal('hide');
+                alerta('success', 'Éxito', data.success);
+                cargarModulos();
+            } else {
+                alerta('error', 'Error', data.error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error al crear el módulo: ", error);
+            alerta('error', 'Error al crear el módulo', '');
+        }
+    });
 });
+
+form_editar_modulo.submit(function (e) {
+    e.preventDefault();
+    const formData = $(this).serialize() + '&accion=actualizar';
+    $.ajax({
+        url: './ajax.php',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            const data = JSON.parse(response);
+            if (data.success) {
+                $('#modalEditarModulo').modal('hide');
+                alerta('success', 'Éxito', data.success);
+                cargarModulos(); // Recarga la lista de módulos
+            } else {
+                alerta('error', 'Error', data.error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error al actualizar el módulo: ", error);
+            alerta('error', 'Error al actualizar el módulo', '');
+        }
+    });
+});
+
+const verificarYConfirmarEliminacion = (id) => {
+    const modulo = $(`.modulo_${id}`);
+    const esActivo = modulo.find('td:nth-child(5)').text().trim() === 'Sí';
+
+    if (!esActivo) {
+        alerta('info', 'Operación no permitida', 'Este módulo ya está inactivo.');
+        return;
+    }
+
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Desactivar un modulo no elimina archivos",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: 'rgb(88 159 224)',
+        cancelButtonColor: 'rgb(230 95 95)',
+        confirmButtonText: 'Sí, eliminar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            eliminarModulo(id);
+        }
+    });
+};
+
+const eliminarModulo = (id) => {
+    $.ajax({
+        url: './ajax.php',
+        type: 'POST',
+        data: { accion: 'eliminar', id: id },
+        success: function (response) {
+            Swal.fire('Eliminado!', 'El módulo ha sido eliminado.', 'success');
+            cargarModulos(); // Recargar
+        },
+        error: function (xhr, status, error) {
+            console.error("Error al eliminar el módulo: ", error);
+            alerta('error', 'Error al eliminar el módulo', '');
+        }
+    });
+};
+
+function alerta(icono, titulo, texto) {
+    Swal.fire({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        showConfirmButton: true,
+    });
+}
