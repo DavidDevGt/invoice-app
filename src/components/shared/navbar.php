@@ -1,3 +1,5 @@
+<?php require_once "./../../config/db_functions.php" ?>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <!-- Toggle button -->
@@ -9,32 +11,37 @@
         <div class="collapse navbar-collapse" id="navbarLeftAlignExample">
             <!-- Left links -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Enlace</a>
-                </li>
-                <!-- Navbar dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Desplegable
-                    </a>
-                    <!-- Dropdown menu -->
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Acción</a></li>
-                        <li><a class="dropdown-item" href="#">Otra acción</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
+                <?php
+                $resultPadres = getModulosPadre(); // Obtiene módulos padre
+                while ($padre = dbFetchAssoc($resultPadres)) : // Itera sobre cada módulo padre
+                    $resultHijos = getModulosHijos($padre['id']); // Obtiene módulos hijos del padre actual
+                    if (dbNumRows($resultHijos) > 0) : // Verifica si el módulo padre tiene hijos
+                ?>
+                        <!-- Navbar dropdown para módulos con hijos -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-<?php echo $padre['id']; ?>" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <?php echo $padre['nombre']; ?>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown-<?php echo $padre['id']; ?>">
+                                <?php while ($hijo = dbFetchAssoc($resultHijos)) : // Itera sobre cada módulo hijo 
+                                ?>
+                                    <li><a class="dropdown-item" href="<?php echo $hijo['ruta']; ?>"><?php echo $hijo['nombre']; ?></a></li>
+                                <?php endwhile; ?>
+                            </ul>
                         </li>
-                        <li><a class="dropdown-item" href="#">Algo más aquí</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Deshabilitado</a>
-                </li>
+                    <?php
+                    else : // Si el módulo padre no tiene hijos, se muestra como un enlace normal
+                    ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><?php echo $padre['nombre']; ?></a>
+                        </li>
+                <?php
+                    endif;
+                endwhile;
+                ?>
             </ul>
-            <!-- Left links -->
+            <!-- End Left links -->
+
         </div>
         <!-- Collapsible wrapper -->
 

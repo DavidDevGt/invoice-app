@@ -31,8 +31,43 @@ function dbNumRows($result)
     return mysqli_num_rows($result);
 }
 
+function dbQueryPreparedSelect($sql, $types = "", $params = [])
+{
+    $conn = getDbConnection();
+    $stmt = $conn->prepare($sql);
+    if ($types && $params) {
+        $stmt->bind_param($types, ...$params);
+    }
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result;
+}
 
-// Limpiar data
+function dbQueryPreparedInsert($sql, $types, $params)
+{
+    $conn = getDbConnection();
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param($types, ...$params);
+    $stmt->execute();
+    $lastId = $stmt->insert_id;
+    $stmt->close();
+    return $lastId;
+}
+
+function getModulosPadre() {
+    $sql = "SELECT * FROM modulos WHERE padre_id IS NULL AND active = 1 ORDER BY orden ASC";
+    return dbQueryPreparedSelect($sql);
+}
+
+function getModulosHijos($padreId) {
+    $sql = "SELECT * FROM modulos WHERE padre_id = ? AND active = 1 ORDER BY orden ASC";
+    return dbQueryPreparedSelect($sql, 'i', [$padreId]);
+}
+
+
+
+// Limpiar datos
 function sanitizeInput($data)
 {
     if (is_array($data)) {
@@ -46,4 +81,10 @@ function sanitizeInput($data)
         $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
         return $data;
     }
+}
+
+// Notifications no leidas por user
+function getUnreadNotifications($userId) {
+    $sql = "SELECT tipo, mensaje FROM notificaciones WHERE usuario_id = $userId AND leido = FALSE";
+    return dbQuery($sql);
 }
