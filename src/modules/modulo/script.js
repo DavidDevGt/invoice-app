@@ -47,21 +47,41 @@ const cargarModulos = () => {
         success: function (response) {
             const modulos = JSON.parse(response);
             tbody_modulos.empty(); // Limpiar la tabla
-            modulos.forEach(modulo => {
-                const activoClass = modulo.active == 1 ? 'verde-clarito' : 'rojo-clarito';
+            modulos.forEach(padre => {
+                const activoClassPadre = padre.active == 1 ? 'verde-clarito' : 'rojo-clarito';
+                // Insertar fila del módulo padre
                 tbody_modulos.append(
-                    `<tr class="modulo_${modulo.id}" data-id="${modulo.id}">
-                        <td>${modulo.nombre}</td>
-                        <td class="text-center">${modulo.orden}</td>
-                        <td>${modulo.padre_id || 'N/A'}</td>
-                        <td>${modulo.ruta}</td>
-                        <td class="text-center ${activoClass}">${modulo.active == 1 ? 'Sí' : 'No'}</td>
+                    `<tr class="modulo_${padre.id}" data-id="${padre.id}">
+                        <td>${padre.nombre}</td>
+                        <td class="text-center">${padre.orden}</td>
+                        <td>N/A</td>
+                        <td>${padre.ruta}</td>
+                        <td class="text-center ${activoClassPadre}">${padre.active == 1 ? 'Sí' : 'No'}</td>
                         <td class="text-center">
                             <button class="btn btn-success btn-sm btn-editar-modulo"><i class="fa-solid fa-pencil"></i></button>
                             <button class="btn btn-danger btn-sm btn-eliminar-modulo"><i class="fa-solid fa-trash"></i></button>
                         </td>
-                     </tr>`
+                    </tr>`
                 );
+                // Si el módulo padre tiene hijos, insertarlos debajo
+                if (padre.hijos && padre.hijos.length > 0) {
+                    padre.hijos.forEach(hijo => {
+                        const activoClassHijo = hijo.active == 1 ? 'verde-clarito' : 'rojo-clarito';
+                        tbody_modulos.append(
+                            `<tr class="modulo_hijo_${hijo.id} modulo_padre_${padre.id}" data-id="${hijo.id}">
+                                <td>-- ${hijo.nombre}</td>
+                                <td class="text-center">${hijo.orden}</td>
+                                <td>${padre.nombre}</td>
+                                <td>${hijo.ruta}</td>
+                                <td class="text-center ${activoClassHijo}">${hijo.active == 1 ? 'Sí' : 'No'}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-success btn-sm btn-editar-modulo"><i class="fa-solid fa-pencil"></i></button>
+                                    <button class="btn btn-danger btn-sm btn-eliminar-modulo"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>`
+                        );
+                    });
+                }
             });
         },
         error: function (xhr, status, error) {

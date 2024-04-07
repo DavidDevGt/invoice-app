@@ -19,21 +19,15 @@
                 ?>
                         <!-- Navbar dropdown para módulos con hijos -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown-<?php echo $padre['id']; ?>" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <!-- Aquí se ha cambiado el href por javascript:void(0); para "desactivar" el enlace -->
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0);" id="navbarDropdown-<?php echo $padre['id']; ?>" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <?php echo $padre['nombre']; ?>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown-<?php echo $padre['id']; ?>">
-                                <?php while ($hijo = dbFetchAssoc($resultHijos)) : // Itera sobre cada módulo hijo 
-                                ?>
+                                <?php while ($hijo = dbFetchAssoc($resultHijos)) : ?>
                                     <li><a class="dropdown-item" href="<?php echo getBaseURL() . $hijo['ruta']; ?>"><?php echo $hijo['nombre']; ?></a></li>
                                 <?php endwhile; ?>
                             </ul>
-                        </li>
-                    <?php
-                    else : // Si el módulo padre no tiene hijos, se muestra como un enlace normal
-                    ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?php echo getBaseURL() . $padre['ruta']; ?>"><?php echo $padre['nombre']; ?></a>
                         </li>
                 <?php
                     endif;
@@ -41,6 +35,7 @@
                 ?>
             </ul>
             <!-- End Left links -->
+        </div>
 
         </div>
         <!-- Collapsible wrapper -->
@@ -117,23 +112,13 @@
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    var dropdowns = document.querySelectorAll('.navbar .dropdown-toggle');
-    dropdowns.forEach(function(dropdown) {
-        dropdown.addEventListener('click', function(event) {
-            if (dropdown.getAttribute('href') === '#') {
-                event.preventDefault();
+    const LARGO_CARACTER = 35;
+    document.addEventListener("DOMContentLoaded", function() {
+        var notifications = document.querySelectorAll(".dropdown-notifications .dropdown-item");
+        notifications.forEach(function(item) {
+            if (item.textContent.length > LARGO_CARACTER) {
+                item.textContent = item.textContent.substring(0, LARGO_CARACTER) + "...";
             }
         });
     });
-    
-    const LARGO_CARACTER = 35;
-    var notifications = document.querySelectorAll(".dropdown-notifications .dropdown-item");
-    notifications.forEach(function(item) {
-        if (item.textContent.length > LARGO_CARACTER) {
-            item.textContent = item.textContent.substring(0, LARGO_CARACTER) + "...";
-        }
-    });
-});
-
 </script>

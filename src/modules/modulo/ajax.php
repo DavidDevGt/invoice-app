@@ -75,9 +75,9 @@ function eliminarModulo()
     }
 }
 
-function leerModulos()
-{
-    $sql = 'SELECT * FROM modulos ORDER BY orden';
+function leerModulos() {
+    // Seleccionamos todos los módulos y los ordenamos primero por si tienen padre_id (los padres primero) y luego por orden
+    $sql = 'SELECT * FROM modulos ORDER BY CASE WHEN padre_id IS NULL THEN 0 ELSE 1 END, padre_id, orden';
     $result = dbQuery($sql);
 
     $modulos = [];
@@ -88,7 +88,25 @@ function leerModulos()
         }
     }
 
-    echo json_encode($modulos);
+    // Creamos un array para los padres
+    $modulosOrdenados = [];
+    foreach ($modulos as $modulo) {
+        if ($modulo['padre_id'] == null) {
+            // Agregamos el modulo padre al array
+            $modulosOrdenados[$modulo['id']] = $modulo;
+            // Y le agregamos una clave 'hijos' para sus módulos hijos
+            $modulosOrdenados[$modulo['id']]['hijos'] = [];
+        }
+    }
+
+    // Ahora agregamos los hijos a sus respectivos padres
+    foreach ($modulos as $modulo) {
+        if ($modulo['padre_id'] != null && isset($modulosOrdenados[$modulo['padre_id']])) {
+            $modulosOrdenados[$modulo['padre_id']]['hijos'][] = $modulo;
+        }
+    }
+
+    echo json_encode(array_values($modulosOrdenados));
 }
 
 function leerModuloPorId()
