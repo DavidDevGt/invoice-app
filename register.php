@@ -6,11 +6,13 @@ if (php_sapi_name() == "cli") {
     // Modo CLI
     $usuario = 'admin1';
     $password = 'admin1';
+    $codigo = 'ADMIN';
 } else {
     // Modo Web
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
-        $usuario = $_POST['username'] ?? 'admin';
-        $password = $_POST['password'] ?? 'admin';
+        $usuario = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $codigo = $_POST['codigo'] ?? '';
     }
 }
 
