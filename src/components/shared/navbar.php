@@ -25,7 +25,7 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown-<?php echo $padre['id']; ?>">
                                 <?php while ($hijo = dbFetchAssoc($resultHijos)) : // Itera sobre cada módulo hijo 
                                 ?>
-                                    <li><a class="dropdown-item" href="<?php echo $hijo['ruta']; ?>"><?php echo $hijo['nombre']; ?></a></li>
+                                    <li><a class="dropdown-item" href="<?php echo getBaseURL() . $hijo['ruta']; ?>"><?php echo $hijo['nombre']; ?></a></li>
                                 <?php endwhile; ?>
                             </ul>
                         </li>
@@ -33,7 +33,7 @@
                     else : // Si el módulo padre no tiene hijos, se muestra como un enlace normal
                     ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><?php echo $padre['nombre']; ?></a>
+                            <a class="nav-link" href="<?php echo getBaseURL() . $padre['ruta']; ?>"><?php echo $padre['nombre']; ?></a>
                         </li>
                 <?php
                     endif;

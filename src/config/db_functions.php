@@ -55,17 +55,35 @@ function dbQueryPreparedInsert($sql, $types, $params)
     return $lastId;
 }
 
-function getModulosPadre() {
+// Navbar
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'];
+$baseURL = $protocol . '://' . $host . '/invoice-app/src/';
+
+function getBaseURL()
+{
+    global $baseURL;
+    return $baseURL;
+}
+
+function getModulosPadre()
+{
     $sql = "SELECT * FROM modulos WHERE padre_id IS NULL AND active = 1 ORDER BY orden ASC";
     return dbQueryPreparedSelect($sql);
 }
 
-function getModulosHijos($padreId) {
+function getModulosHijos($padreId)
+{
     $sql = "SELECT * FROM modulos WHERE padre_id = ? AND active = 1 ORDER BY orden ASC";
     return dbQueryPreparedSelect($sql, 'i', [$padreId]);
 }
 
-
+// Notifications no leidas por user
+function getUnreadNotifications($userId)
+{
+    $sql = "SELECT tipo, mensaje FROM notificaciones WHERE usuario_id = $userId AND leido = FALSE";
+    return dbQuery($sql);
+}
 
 // Limpiar datos
 function sanitizeInput($data)
@@ -81,10 +99,4 @@ function sanitizeInput($data)
         $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
         return $data;
     }
-}
-
-// Notifications no leidas por user
-function getUnreadNotifications($userId) {
-    $sql = "SELECT tipo, mensaje FROM notificaciones WHERE usuario_id = $userId AND leido = FALSE";
-    return dbQuery($sql);
 }
