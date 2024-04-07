@@ -23,9 +23,10 @@ function mostrarUsuarios() {
                         <td>${usuario.codigo}</td>
                         <td>${usuario.usuario}</td>
                         <td>${usuario.nombre_rol}</td>
+                        <td>${usuario.active == 1 ? 'Activo' : 'Inactivo'}</td>
                         <td>
-                            <button type="button" onclick="mostrarModalPermisos('${usuario.usuario}', ${usuario.id})" class="btn btn-warning">Permisos</button>
-                            <button type="button" onclick="mostrarModalEditarUsuario(${usuario.id})" class="btn btn-primary">Editar</button>
+                            <button type="button" onclick="mostrarModalPermisos('${usuario.usuario}', ${usuario.id})" class="btn btn-sm btn-secondary">Gestionar Permisos</button>
+                            <button type="button" onclick="mostrarModalEditarUsuario(${usuario.id})" class="btn btn-sm btn-success">Editar</button>
                         </td>
                     </tr>
                 `;

@@ -72,9 +72,9 @@ switch ($accion) {
 
         break;
 
-    case "roles":
+    case "mostrar_roles":
 
-        $sql = "SELECT nombre, id FROM roles ORDER BY id ASC";
+        $sql = "SELECT id, nombre FROM roles WHERE active ORDER BY id ASC";
 
         $query = dbQuery($sql);
         $json = array();

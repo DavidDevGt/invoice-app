@@ -41,7 +41,8 @@ require_once './../../components/header/default.php';
             <!-- Insert de tabla de datos -->
             <table id="tabla" class="table table-bordered table-striped">
                 <thead>
-                    <tr class="table-dark">
+                    <tr class="table-dark text-center">
+                        <th scope="col">ID</th>
                         <th scope="col">Código</th>
                         <th scope="col">Usuario</th>
                         <th scope="col">Rol</th>
@@ -49,7 +50,7 @@ require_once './../../components/header/default.php';
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="tablebody">
+                <tbody class="text-center" id="tablebody">
 
                 </tbody>
             </table>
