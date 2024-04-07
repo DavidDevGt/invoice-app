@@ -36,11 +36,99 @@ function mostrarUsuarios() {
     });
 }
 
-// Mostrar modal de permisos
 function mostrarModalPermisos(usuario, id) {
     $('#exampleModal').modal('show');
     $('#usuario').html(usuario);
     $('#usuario_select').val(id);
+    cargarModulos(id);
+}
+
+function cargarModulos(usuarioId) {
+    $.ajax({
+        type: 'POST',
+        url: 'ajax.php',
+        data: { accion: 'mostrar_modulos' },
+        success: function (modulosResponse) {
+            const modulos = JSON.parse(modulosResponse);
+            // Filtrar solo módulos padres
+            const modulosPadres = modulos.filter(modulo => modulo.padre_id === null);
+            $('#accordionPermisos').empty(); // Limpiar el acordeón antes de cargar nuevos módulos
+
+            // Iterar sobre módulos padres para construir acordeón
+            modulosPadres.forEach((moduloPadre, index) => {
+                const moduloId = `modulo-${moduloPadre.id}`;
+                let moduloHtml = `
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading${moduloId}">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${moduloId}" aria-expanded="${index === 0}" aria-controls="collapse${moduloId}">
+                                ${moduloPadre.nombre}
+                            </button>
+                        </h2>
+                        <div id="collapse${moduloId}" class="accordion-collapse collapse ${index === 0 ? 'show' : ''}" aria-labelledby="heading${moduloId}" data-bs-parent="#accordionPermisos">
+                            <div class="accordion-body" id="modulosHijos-${moduloPadre.id}">
+                                <!-- Submódulos se cargarán aquí -->
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $('#accordionPermisos').append(moduloHtml);
+                cargarSubmodulos(moduloPadre.id, usuarioId); // Llamada a cargar submódulos
+            });
+        }
+    });
+}
+
+function cargarSubmodulos(moduloPadreId, usuarioId) {
+    if (!$(`#modulosHijos-${moduloPadreId}`).hasClass('loaded')) {
+        $.ajax({
+            type: 'POST',
+            url: 'ajax.php',
+            data: { accion: 'mostrar_modulos_hijo', modulo_padre_id: moduloPadreId },
+            success: function (submodulosResponse) {
+                const submodulos = JSON.parse(submodulosResponse);
+                let submodulosHtml = '';
+                submodulos.forEach(submodulo => {
+                    submodulosHtml += `
+                        <div class="row align-items-center mb-2">
+                            <div class="col">
+                                <span>${submodulo.nombre}</span>
+                            </div>
+                            <div class="col">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="lectura-${submodulo.id}" name="permisos[${submodulo.id}][lectura]">
+                                    <label class="form-check-label" for="lectura-${submodulo.id}">Lectura</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="escritura-${submodulo.id}" name="permisos[${submodulo.id}][escritura]">
+                                    <label class="form-check-label" for="escritura-${submodulo.id}">Escritura</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="ambos-${submodulo.id}" onchange="seleccionarAmbos(${submodulo.id})">
+                                    <label class="form-check-label" for="ambos-${submodulo.id}">Todos</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    `;
+                });
+                $(`#modulosHijos-${moduloPadreId}`).addClass('loaded').html(submodulosHtml);
+            }
+        });
+    }
+}
+
+// Función para seleccionar o deseleccionar ambos permisos
+function seleccionarAmbos(submoduloId) {
+    const lecturaCheck = $(`#lectura-${submoduloId}`);
+    const escrituraCheck = $(`#escritura-${submoduloId}`);
+    const ambosCheck = $(`#ambos-${submoduloId}`).is(':checked');
+
+    lecturaCheck.prop('checked', ambosCheck);
+    escrituraCheck.prop('checked', ambosCheck);
 }
 
 // Mostrar modal para crear un nuevo usuario
@@ -75,7 +163,7 @@ function mostrarModalEditarUsuario(usuarioId) {
         type: 'POST',
         url: 'ajax.php',
         data: { accion: 'usuario_seleccionado', usuario_id: usuarioId },
-        success: function(response) {
+        success: function (response) {
             const usuario = JSON.parse(response)[0];
 
             $('#edit_id').val(usuario.id);

@@ -60,7 +60,7 @@ switch ($accion) {
 
     case "mostrar_modulos":
 
-        $sql = "SELECT * FROM modulo WHERE active = 1 ORDER BY orden ASC";
+        $sql = "SELECT * FROM modulos WHERE active = 1 ORDER BY orden ASC";
 
         $query = dbQuery($sql);
         $json = array();
@@ -86,9 +86,45 @@ switch ($accion) {
 
         break;
 
+    case "actualizar_permisos":
+        $usuario_id = $_POST["usuario_id"];
+        $permisos = $_POST["permisos"];
+
+        foreach ($permisos as $permiso) {
+            $module_id = $permiso['module_id'];
+            $escritura = $permiso['escritura'];
+            $lectura = $permiso['lectura'];
+
+            $sql = "SELECT id FROM permisos WHERE usuario_id = $usuario_id AND module_id = $module_id";
+            $query = dbQuery($sql);
+            if (dbFetchAssoc($query)) {
+                $sql = "UPDATE permisos SET escritura = $escritura, lectura = $lectura WHERE usuario_id = $usuario_id AND module_id = $module_id";
+            } else {
+                $sql = "INSERT INTO permisos (usuario_id, module_id, escritura, lectura) VALUES ($usuario_id, $module_id, $escritura, $lectura)";
+            }
+            dbQuery($sql);
+        }
+
+        echo json_encode(['success' => true]);
+        break;
+
+    case "obtener_permisos_usuarios":
+        // Obtener permisos
+        $usuario_id = $_POST["usuario_id"];
+        $sql = "SELECT * FROM permisos WHERE usuario_id = $usuario_id";
+        $query = dbQuery($sql);
+
+        $permisos = array();
+        while ($row = dbFetchAssoc($query)) {
+            $permisos[] = $row;
+        }
+
+        echo json_encode($permisos);
+        break;
+
     case "mostrar_modulos_hijo":
         $modulo_padre_id = $_POST['modulo_padre_id'];
-        $sql = "SELECT * FROM modulo WHERE padre = " . $modulo_padre_id . " ORDER BY orden";
+        $sql = "SELECT * FROM modulos WHERE padre_id = " . $modulo_padre_id . " ORDER BY orden";
 
         $query = dbQuery($sql);
         $json = array();

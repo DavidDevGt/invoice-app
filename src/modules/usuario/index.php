@@ -69,7 +69,8 @@ require_once './../../components/header/default.php';
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <hr>
-                        <div class="accordion" id="modulos">
+                        <div class="accordion" id="accordionPermisos">
+                            <!-- Los módulos se cargarán aquí dinámicamente -->
                         </div>
                     </div>
                 </div>
