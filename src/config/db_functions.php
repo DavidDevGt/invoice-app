@@ -66,7 +66,7 @@ function getBaseURL()
         if ($part == 'src') break;
         $dirPath .= $part . '/';
     }
-    $baseURL = $protocol . '://' . $host . '/' . $dirPath . 'src/';
+    $baseURL = $protocol . '://' . $host . '' . $dirPath . 'src/';
     return rtrim($baseURL, '/') . '/';
 }
 
