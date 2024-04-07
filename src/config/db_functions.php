@@ -56,15 +56,20 @@ function dbQueryPreparedInsert($sql, $types, $params)
 }
 
 // Navbar
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
-$host = $_SERVER['HTTP_HOST'];
-$baseURL = $protocol . '://' . $host . '/invoice-app/src/';
-
 function getBaseURL()
 {
-    global $baseURL;
-    return $baseURL;
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    $uriParts = explode('/', $_SERVER['REQUEST_URI']);
+    $dirPath = '';
+    foreach ($uriParts as $part) {
+        if ($part == 'src') break;
+        $dirPath .= $part . '/';
+    }
+    $baseURL = $protocol . '://' . $host . '/' . $dirPath . 'src/';
+    return rtrim($baseURL, '/') . '/';
 }
+
 
 function getModulosPadre()
 {
