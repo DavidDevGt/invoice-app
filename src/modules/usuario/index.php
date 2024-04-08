@@ -33,7 +33,7 @@ require_once './../../components/header/default.php';
                     <h3>Usuarios</h3>
                 </div>
                 <div class="col-md-6">
-                    <input class="form-control w-100" type="text" id="busqueda" placeholder="Buscar...">
+                    <input class="form-control w-100" type="text" id="busqueda" placeholder="Buscar por codigo o username...">
                 </div>
             </div>
 

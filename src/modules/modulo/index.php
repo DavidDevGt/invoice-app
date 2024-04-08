@@ -86,11 +86,17 @@ require_once './../../components/header/default.php';
                                 <option value="2">Secundario</option>
                             </select>
                         </div>
+                        <div class="mb-3" id="divModuloPadreCrear" style="display: none;">
+                            <label for="padreIdModuloCrear" class="form-label">Módulo Padre</label>
+                            <select class="form-control" id="padreIdModuloCrear" name="padre_id">
+                                <!-- Las opciones se cargarán dinámicamente -->
+                            </select>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar</button>
+                    <button type="button" id="btnGuardarCrear" class="btn btn-primary">Guardar</button>
                 </div>
             </div>
         </div>
@@ -123,6 +129,12 @@ require_once './../../components/header/default.php';
                             <select name="tipoModuloEditar" class="form-control">
                                 <option value="1">Primario</option>
                                 <option value="2">Secundario</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="divModuloPadreEditar" style="display: none;">
+                            <label for="padreIdModuloEditar" class="form-label">Módulo Padre</label>
+                            <select class="form-control" id="padreIdModuloEditar" name="padre_id">
+                                <!-- Las opciones se cargarán dinámicamente -->
                             </select>
                         </div>
                         <div class="mb-3">

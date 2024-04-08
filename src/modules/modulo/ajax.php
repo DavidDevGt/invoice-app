@@ -20,18 +20,33 @@ switch ($accion) {
         leerModuloPorId();
         break;
 
+    case 'leer_modulos_primarios':
+        leerModulosPrimarios();
+        break;
+
     default:
         echo json_encode(['error' => 'Acción no reconocida']);
         break;
 }
 
+function leerModulosPrimarios()
+{
+    $sql = "SELECT id, nombre FROM modulos WHERE padre_id IS NULL AND active = 1 ORDER BY nombre";
+    $result = dbQuery($sql);
+    $modulos = [];
+    while ($modulo = dbFetchAssoc($result)) {
+        $modulos[] = $modulo;
+    }
+    echo json_encode($modulos);
+}
 function crearModulo()
 {
     $nombre_modulo = sanitizeInput($_POST['nombre_modulo']);
     $orden = sanitizeInput($_POST['orden']);
     $ruta = sanitizeInput($_POST['ruta']);
+    $padre_id = sanitizeInput($_POST['padre_id']);
 
-    $sql = "INSERT INTO modulos (nombre, orden, ruta) VALUES ('$nombre_modulo', '$orden', '$ruta')";
+    $sql = "INSERT INTO modulos (nombre, orden, ruta, padre_id) VALUES ('$nombre_modulo', '$orden', '$ruta', '$padre_id')";
 
     $result = dbQuery($sql);
 
@@ -75,7 +90,8 @@ function eliminarModulo()
     }
 }
 
-function leerModulos() {
+function leerModulos()
+{
     // Seleccionamos todos los módulos y los ordenamos primero por si tienen padre_id (los padres primero) y luego por orden
     $sql = 'SELECT * FROM modulos ORDER BY CASE WHEN padre_id IS NULL THEN 0 ELSE 1 END, padre_id, orden';
     $result = dbQuery($sql);

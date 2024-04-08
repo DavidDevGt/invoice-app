@@ -7,9 +7,51 @@ $(document).ready(function () {
         $('#modalCrearModulo').modal('show');
     });
 
+    $('#btnGuardarCrear').click(function () {
+        $('#formCrearModulo').submit();
+    });
+
+    $('select[name="tipoModuloCrear"]').change(function () {
+        const tipo = $(this).val();
+        if (tipo == "2") { // Secundario
+            cargarModulosPadre('#padreIdModuloCrear');
+            $('#divModuloPadreCrear').show();
+        } else {
+            $('#divModuloPadreCrear').hide();
+        }
+    });
+
+    $('select[name="tipoModuloEditar"]').change(function () {
+        const tipo = $(this).val();
+        if (tipo == "2") { // Secundario
+            cargarModulosPadre('#padreIdModuloEditar');
+            $('#divModuloPadreEditar').show();
+        } else {
+            $('#divModuloPadreEditar').hide();
+        }
+    });
+
+    function cargarModulosPadre(selector) {
+        $.ajax({
+            url: './ajax.php',
+            type: 'POST',
+            data: { accion: 'leer_modulos_primarios' },
+            success: function (response) {
+                const modulos = JSON.parse(response);
+                const selectPadre = $(selector);
+                selectPadre.empty(); // Limpiar el select
+                modulos.forEach(modulo => {
+                    selectPadre.append(`<option value="${modulo.id}">${modulo.nombre}</option>`);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("Error al cargar módulos primarios: ", error);
+            }
+        });
+    }
+
     $(document).on('click', '.btn-editar-modulo', function () {
         const id = $(this).closest('tr').data('id');
-        // Realiza la petición AJAX para obtener los datos del módulo seleccionado
         $.ajax({
             url: './ajax.php',
             type: 'POST',
@@ -49,7 +91,6 @@ const cargarModulos = () => {
             tbody_modulos.empty(); // Limpiar la tabla
             modulos.forEach(padre => {
                 const activoClassPadre = padre.active == 1 ? 'verde-clarito' : 'rojo-clarito';
-                // Insertar fila del módulo padre
                 tbody_modulos.append(
                     `<tr class="modulo_${padre.id}" data-id="${padre.id}">
                         <td>${padre.nombre}</td>

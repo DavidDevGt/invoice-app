@@ -85,11 +85,9 @@ function cargarModulos(usuarioId) {
         data: { accion: 'mostrar_modulos' },
         success: function (modulosResponse) {
             const modulos = JSON.parse(modulosResponse);
-            // Filtrar solo módulos padres
             const modulosPadres = modulos.filter(modulo => modulo.padre_id === null);
-            $('#accordionPermisos').empty(); // Limpiar el acordeón antes de cargar nuevos módulos
+            $('#accordionPermisos').empty(); // Limpiar
 
-            // Iterar sobre módulos padres para construir acordeón
             modulosPadres.forEach((moduloPadre, index) => {
                 const moduloId = `modulo-${moduloPadre.id}`;
                 let moduloHtml = `
@@ -107,7 +105,7 @@ function cargarModulos(usuarioId) {
                     </div>
                 `;
                 $('#accordionPermisos').append(moduloHtml);
-                cargarSubmodulos(moduloPadre.id, usuarioId); // Llamada a cargar submódulos
+                cargarSubmodulos(moduloPadre.id, usuarioId); // Cargar submódulos
             });
         }
     });

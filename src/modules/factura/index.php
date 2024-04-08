@@ -27,7 +27,9 @@ require_once './../../components/header/default.php';
     <div class="p-4 m-4 bg-white rounded">
         <h1 class="text-center mt-3">Bienvenido</h1>
     </div>
+
 </body>
+
 <?php
 
 //** FOOTER *//
