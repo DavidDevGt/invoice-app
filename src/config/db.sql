@@ -176,10 +176,10 @@ CREATE TABLE proveedores (
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE matches_productos (
+CREATE TABLE matches_articulos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     articulo_id INT NOT NULL,
-    nombres_alternativos TEXT NOT NULL,  --Diccionario para almacenar nombres alternativos del producto
+    nombres_alternativos TEXT NOT NULL,
     proveedor_id INT NOT NULL,
     veces_matcheado INT DEFAULT 1, -- Cantidad de veces que se dio si a Match
     FOREIGN KEY (articulo_id) REFERENCES articulos(id),
