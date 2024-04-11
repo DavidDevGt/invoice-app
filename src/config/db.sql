@@ -27,6 +27,16 @@ CREATE TABLE usuarios (
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE usuario_perfil (
+    usuario_id INT PRIMARY KEY,
+    correo VARCHAR(255) NOT NULL,
+    nombre_completo VARCHAR(255) NOT NULL,
+    direccion VARCHAR(255),
+    telefono VARCHAR(45),
+    fecha_nacimiento DATE,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
 CREATE TABLE permisos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
@@ -141,6 +151,7 @@ CREATE TABLE subcategorias (
 
 CREATE TABLE articulos (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo_articulo VARCHAR(255),
     nombre VARCHAR(255) NOT NULL,
     descripcion TEXT,
     unidad_medida_id INT NOT NULL,
@@ -148,6 +159,31 @@ CREATE TABLE articulos (
     active BOOLEAN DEFAULT TRUE,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE proveedores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo VARCHAR(255),
+    nombre VARCHAR(255) NOT NULL,
+    direccion VARCHAR(255),
+    telefono VARCHAR(45),
+    correo VARCHAR(255),
+    nombre_contacto VARCHAR(255),
+    telefono_contacto VARCHAR(45),
+    dias_credito INT NOT NULL DEFAULT 0,
+    nit VARCHAR(100),
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE matches_productos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    articulo_id INT NOT NULL,
+    nombres_alternativos TEXT NOT NULL,  --Diccionario para almacenar nombres alternativos del producto
+    proveedor_id INT NOT NULL,
+    veces_matcheado INT DEFAULT 1, -- Cantidad de veces que se dio si a Match
+    FOREIGN KEY (articulo_id) REFERENCES articulos(id),
+    FOREIGN KEY (proveedor_id) REFERENCES proveedores(id)
 );
 
 CREATE TABLE tipos_precio (
@@ -189,6 +225,7 @@ CREATE TABLE ingresos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     usuario_id INT NOT NULL,
+    proveedor_id INT NOT NULL,
     observaciones TEXT,
     active INT DEFAULT 1,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
@@ -266,16 +303,29 @@ CREATE TABLE bitacora_facturas (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
+
+
+CREATE TABLE notificaciones (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    mensaje TEXT NOT NULL,
+    estado INT NOT NULL DEFAULT 0, -- 0 = Creada, 1 = Enviada, 2 = No leida, 3 = Leida
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
 DELIMITER $$
 
-CREATE PROCEDURE LoginUsuario(IN _email VARCHAR(255), IN _password VARCHAR(255))
+CREATE PROCEDURE LoginUsuario(IN _usuario VARCHAR(255))
 BEGIN
-    SELECT id, nombre, email, rol_id
+    SELECT id, usuario, password, rol_id, active
     FROM usuarios
-    WHERE email = _email AND password = _password AND active = TRUE;
+    WHERE usuario = _usuario AND active = TRUE;
 END$$
 
 DELIMITER ;
+
 
 DELIMITER $$
 
