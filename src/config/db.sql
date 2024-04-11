@@ -66,11 +66,13 @@ CREATE TABLE pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cliente_id INT NOT NULL,
     fecha_pedido DATE NOT NULL,
-    forma_de_pago INT DEFAULT 0,
+    forma_de_pago INT DEFAULT 0, -- 0 = Efectivo, 1 = Tarjeta, 2 = Transferencia
     total DECIMAL(20,2),
-    status INT DEFAULT 1, -- 0 = Rechazado, 1 = Creado, 2 = Pend. Autorizar, 3 = Autorizado, 4 = En Bodega, 5 = Pedido Completado (se crea factura)
+    status INT DEFAULT 1, -- 1 = Creado, 2 = Autorizado, 3 = Preparacion, 4 = Entregado, 5 = Pagado
     observaciones TEXT,
     usuario_id INT NOT NULL,
+    usuario_autoriza INT NULL DEFAULT 0,
+    usuario_prepara INT NULL DEFAULT 0,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
@@ -93,11 +95,11 @@ CREATE TABLE facturas (
     pedido_id INT NOT NULL,
     cliente_id INT NOT NULL,
     fecha_factura DATE NOT NULL,
-    forma_de_pago INT DEFAULT 0,
+    forma_de_pago INT DEFAULT 0, -- 0 = Efectivo, 1 = Tarjeta, 2 = Transferencia
     total DECIMAL(20,2),
     serie VARCHAR(45),
     numero_factura INT,
-    status INT DEFAULT 1, # 0 = Anulada, 1 = Creada, 3 = En Transito, 4 = Anulada, 5 = Firmada FEL
+    status INT DEFAULT 1, # 0 = Anulada, 1 = Creada, 2 = Rechazada, 3 = Firmada FEL, 4 = Pagado
     usuario_id INT NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -168,7 +170,7 @@ CREATE TABLE proveedores (
     direccion VARCHAR(255),
     telefono VARCHAR(45),
     correo VARCHAR(255),
-    nombre_contacto VARCHAR(255),
+    nombre_contacto VAR CHAR(255),
     telefono_contacto VARCHAR(45),
     dias_credito INT NOT NULL DEFAULT 0,
     nit VARCHAR(100),
