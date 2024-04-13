@@ -115,6 +115,7 @@ require_once './../../components/header/default.php';
                         <div class="mb-3">
                             <label for="nombreModuloEditar" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="nombreModuloEditar" name="nombre_modulo" required>
+                            <input type="text" class="form-control" id="idModulo" name="id_modulo" hidden>
                         </div>
                         <div class="mb-3">
                             <label for="ordenModulEditear" class="form-label">Orden</label>
@@ -148,7 +149,7 @@ require_once './../../components/header/default.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
+                    <button type="button" id="guardar_cambios_modulo" class="btn btn-primary">Guardar Cambios</button>
                 </div>
             </div>
         </div>

@@ -189,46 +189,37 @@ switch ($accion) {
         break;
 
     case "editar_usuario":
-        $id = sanitizeInput($_POST['formData']['usuario_id']);
-        $codigo = sanitizeInput($_POST['formData']['codigo']);
-        $usuario = sanitizeInput($_POST['formData']['usuario']);
-        $rol_id = sanitizeInput($_POST['formData']['rol']);
-        $active = sanitizeInput($_POST['formData']['estado']);
+        if (isset($_POST['formData'])) {
+            $formData = $_POST['formData'];
+            $id = sanitizeInput($formData['usuario_id']);
+            $codigo = sanitizeInput($formData['codigo']);
+            $usuario = sanitizeInput($formData['usuario']);
+            $rol_id = sanitizeInput($formData['rol']);
+            $active = sanitizeInput($formData['estado']);
+            $password = isset($formData['password']) ? password_hash($formData['password'], PASSWORD_DEFAULT) : null;
 
-        if (isset($_POST['formData']['password']) && !empty($_POST['formData']['password'])) {
-            $password = password_hash($_POST['formData']['password'], PASSWORD_DEFAULT);
-            $sql = "UPDATE usuarios SET 
-                            codigo = '$codigo', 
-                            usuario = '$usuario', 
-                            rol_id = $rol_id, 
-                            active = $active,
-                            password = '$password' 
-                        WHERE id = $id";
-        } else {
-            $sql = "UPDATE usuarios SET 
-                            codigo = '$codigo', 
-                            usuario = '$usuario', 
-                            rol_id = $rol_id, 
-                            active = $active 
-                        WHERE id = $id";
+            if ($password) {
+                $sql = "UPDATE usuarios SET codigo = '$codigo', usuario = '$usuario', rol_id = '$rol_id', active = '$active', password = '$password' WHERE id = '$id'";
+            } else {
+                $sql = "UPDATE usuarios SET codigo = '$codigo', usuario = '$usuario', rol_id = '$rol_id', active = '$active' WHERE id = '$id'";
+            }
+
+            $result = dbQuery($sql);
+
+            if (!$result) {
+                $response = [
+                    'icon' => 'error',
+                    'title' => '¡Error!',
+                    'text' => 'No se guardaron los cambios, error en consulta.'
+                ];
+            } else {
+                $response = [
+                    'icon' => 'success',
+                    'title' => '¡Éxito!',
+                    'text' => 'Se guardaron los cambios correctamente.'
+                ];
+            }
+            echo json_encode($response);
         }
-
-        $result = dbQuery($sql);
-
-        if (!$result) {
-            $response = [
-                'icon' => 'error',
-                'title' => '¡Error!',
-                'text' => 'No se guardaron los cambios, error en consulta.'
-            ];
-        } else {
-            $response = [
-                'icon' => 'success',
-                'title' => '¡Éxito!',
-                'text' => 'Se guardaron los cambios correctamente.'
-            ];
-        }
-        echo json_encode($response);
-
         break;
 }

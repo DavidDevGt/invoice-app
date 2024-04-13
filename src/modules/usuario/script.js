@@ -186,6 +186,9 @@ function crearUsuario() {
             let mensaje = JSON.parse(response);
             alerta(mensaje.icon, mensaje.title, mensaje.text);
             mostrarUsuarios();
+        },
+        error: function (xhr, status, error) {
+            console.error("Error en AJAX: " + status + " - " + error);
         }
     });
 }
@@ -198,12 +201,13 @@ function mostrarModalEditarUsuario(usuarioId) {
         data: { accion: 'usuario_seleccionado', usuario_id: usuarioId },
         success: function (response) {
             const usuario = JSON.parse(response)[0];
-
             $('#edit_id').val(usuario.id);
             $('#edit_codigo').val(usuario.codigo);
             $('#edit_usuario').val(usuario.usuario);
-
+            $('#edit_rol_id').val(usuario.rol_id).change();
+            $('#edit_active').val(usuario.active.toString());
             $('#editModal').modal('show');
+            cargarRoles();
         }
     });
 }
@@ -216,13 +220,10 @@ function guardarCambiosUsuario() {
         usuario: $('#edit_usuario').val(),
         rol: $('#edit_rol_id').val(),
         estado: $('#edit_active').val(),
-        password: $('#edit_password').val() // Obtener la nueva contraseña
+        password: $('#edit_password').val()
     };
 
-    // Verificar si se proporcionó una nueva contraseña y si tiene más de 7 caracteres
-    if (formData.password && formData.password.length > 7) {
-        formData.password = formData.password; // Encriptar con php password default
-    } else {
+    if (!formData.password || formData.password.length <= 7) {
         delete formData.password;
     }
 
@@ -238,7 +239,6 @@ function guardarCambiosUsuario() {
         }
     });
 }
-
 
 function alerta(icono, titulo, texto) {
     Swal.fire({

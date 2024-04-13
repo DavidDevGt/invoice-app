@@ -20,6 +20,28 @@ function dbQueryInsert($sql)
     return $lastId;
 }
 
+function dbQueryUpdate($sql) {
+    $conn = getDbConnection();
+    if (!$conn) {
+        throw new Exception("No se pudo conectar a la base de datos.");
+    }
+
+    if ($conn->connect_error) {
+        throw new Exception("Fallo de conexión: " . $conn->connect_error);
+    }
+
+    $result = $conn->query($sql);
+    if ($result === false) {
+        // Captura el error específico de SQL antes de cerrar la conexión.
+        $error = $conn->error;
+        $conn->close();
+        throw new Exception("Error SQL: " . $error);
+    }
+
+    $conn->close();
+    return $result;
+}
+
 function dbFetchAssoc($result)
 {
     $return = mysqli_fetch_assoc($result);

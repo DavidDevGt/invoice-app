@@ -1,4 +1,8 @@
 <?php
+// ini_set('log_errors', 1);
+// ini_set('error_log', './errors.log');
+// error_reporting(E_ALL);
+
 require_once "./../../config/db_functions.php";
 
 $accion = $_POST['accion'] ?? $_GET['accion'] ?? '';
@@ -57,15 +61,18 @@ function crearModulo()
     }
 }
 
-function actualizarModulo()
-{
-    $id = sanitizeInput($_POST['id']);
-    $nombre_modulo = sanitizeInput($_POST['nombre_modulo']);
+function actualizarModulo() {
+    // Aquí deberías obtener los valores del POST
+    $id = sanitizeInput($_POST['id_modulo']);
+    $nombre = sanitizeInput($_POST['nombre_modulo']);
     $orden = sanitizeInput($_POST['orden']);
     $ruta = sanitizeInput($_POST['ruta']);
+    $tipo = sanitizeInput($_POST['tipoModuloEditar']);
+    $padre_id = isset($_POST['padre_id']) ? sanitizeInput($_POST['padre_id']) : null;
+    $activo = sanitizeInput($_POST['activoModuloEditar']);
 
-    $sql = "UPDATE modulos SET nombre = '$nombre_modulo', orden = '$orden', ruta = '$ruta' WHERE id = $id";
-
+    // Supongamos que este es el SQL para actualizar
+    $sql = "UPDATE modulos SET nombre = '$nombre', orden = $orden, ruta = '$ruta', padre_id = $padre_id, active = $activo WHERE id = $id";
     $result = dbQuery($sql);
 
     if ($result) {
@@ -75,20 +82,27 @@ function actualizarModulo()
     }
 }
 
+
 function eliminarModulo()
 {
     $id = sanitizeInput($_POST['id']);
 
     $sql = "UPDATE modulos SET active = 0 WHERE id = $id";
 
-    $result = dbQuery($sql);
+    error_log($sql);
 
-    if ($result) {
-        echo json_encode(['success' => 'Módulo eliminado exitosamente']);
-    } else {
-        echo json_encode(['error' => 'Error al eliminar el módulo']);
+    try {
+        $result = dbQuery($sql);
+        if ($result) {
+            echo json_encode(['success' => 'Módulo eliminado exitosamente']);
+        } else {
+            throw new Exception("La consulta no retornó un resultado exitoso.");
+        }
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Error al eliminar el módulo: ' . $e->getMessage()]);
     }
 }
+
 
 function leerModulos()
 {
@@ -128,10 +142,11 @@ function leerModulos()
 function leerModuloPorId()
 {
     $id = sanitizeInput($_POST['id']);
-    $sql = "SELECT * FROM modulos WHERE id = $id";
+    $sql = "SELECT *, (SELECT COUNT(*) FROM modulos WHERE padre_id = modulos.id) AS es_padre FROM modulos WHERE id = $id";
     $result = dbQuery($sql);
 
     if ($modulo = dbFetchAssoc($result)) {
+        $modulo['es_padre'] = $modulo['es_padre'] > 0 ? true : false;
         echo json_encode($modulo);
     } else {
         echo json_encode(['error' => 'Módulo no encontrado']);

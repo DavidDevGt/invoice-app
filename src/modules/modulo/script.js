@@ -23,32 +23,13 @@ $(document).ready(function () {
 
     $('select[name="tipoModuloEditar"]').change(function () {
         const tipo = $(this).val();
-        if (tipo == "2") { // Secundario
+        if (tipo === "2") { // Si es un módulo hijo
             cargarModulosPadre('#padreIdModuloEditar');
             $('#divModuloPadreEditar').show();
         } else {
             $('#divModuloPadreEditar').hide();
         }
     });
-
-    function cargarModulosPadre(selector) {
-        $.ajax({
-            url: './ajax.php',
-            type: 'POST',
-            data: { accion: 'leer_modulos_primarios' },
-            success: function (response) {
-                const modulos = JSON.parse(response);
-                const selectPadre = $(selector);
-                selectPadre.empty(); // Limpiar el select
-                modulos.forEach(modulo => {
-                    selectPadre.append(`<option value="${modulo.id}">${modulo.nombre}</option>`);
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error("Error al cargar módulos primarios: ", error);
-            }
-        });
-    }
 
     $(document).on('click', '.btn-editar-modulo', function () {
         const id = $(this).closest('tr').data('id');
@@ -58,10 +39,22 @@ $(document).ready(function () {
             data: { accion: 'modulo_seleccionado', id: id },
             success: function (response) {
                 const modulo = JSON.parse(response);
+                $('#idModulo').val(modulo.id);
                 $('#nombreModuloEditar').val(modulo.nombre);
                 $('#ordenModuloEditar').val(modulo.orden);
                 $('#rutaModuloEditar').val(modulo.ruta);
-                $('select[name="activoModuloEditar"]').val(modulo.active);
+                $('select[name="activoModuloEditar"]').val(modulo.active.toString());
+
+                if (modulo.padre_id) {
+                    // Es un módulo hijo
+                    $('select[name="tipoModuloEditar"]').val('2');
+                    cargarModulosPadre('#padreIdModuloEditar', modulo.padre_id);
+                    $('#divModuloPadreEditar').show();
+                } else {
+                    // Es un módulo padre
+                    $('select[name="tipoModuloEditar"]').val('1');
+                    $('#divModuloPadreEditar').hide();
+                }
                 $('#modalEditarModulo').modal('show');
             },
             error: function (xhr, status, error) {
@@ -73,13 +66,13 @@ $(document).ready(function () {
 
     $(document).on('click', '.btn-eliminar-modulo', function () {
         const id = $(this).closest('tr').data('id');
-        verificarYConfirmarEliminacion(id);
+        eliminarModulo(id);
     });
 });
 
 const tbody_modulos = $('#tbody_modulos');
 const form_crear_modulo = $('#formCrearModulo');
-const form_editar_modulo = $('#formEditarModulo');
+const btn_guardar_cambios = $('#guardar_cambios_modulo');
 
 const cargarModulos = () => {
     $.ajax({
@@ -131,6 +124,27 @@ const cargarModulos = () => {
     });
 };
 
+function cargarModulosPadre(selector, selectedPadreId = null) {
+    $.ajax({
+        url: './ajax.php',
+        type: 'POST',
+        data: { accion: 'leer_modulos_primarios' },
+        success: function (response) {
+            const modulos = JSON.parse(response);
+            const selectPadre = $(selector);
+            selectPadre.empty();
+            selectPadre.append('<option value="">Seleccione un módulo padre</option>');
+            modulos.forEach(modulo => {
+                const selected = modulo.id === selectedPadreId ? ' selected' : '';
+                selectPadre.append(`<option value="${modulo.id}"${selected}>${modulo.nombre}</option>`);
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error("Error al cargar módulos primarios: ", error);
+        }
+    });
+}
+
 form_crear_modulo.submit(function (e) {
     e.preventDefault();
     const formData = $(this).serialize() + '&accion=crear';
@@ -156,9 +170,10 @@ form_crear_modulo.submit(function (e) {
     });
 });
 
-form_editar_modulo.submit(function (e) {
-    e.preventDefault();
-    const formData = $(this).serialize() + '&accion=actualizar';
+btn_guardar_cambios.click(function (e) {
+    e.preventDefault(); // Previene la acción por defecto del formulario.
+    const formData = $('#formEditarModulo').serialize() + '&accion=actualizar';
+    
     $.ajax({
         url: './ajax.php',
         type: 'POST',
@@ -180,30 +195,6 @@ form_editar_modulo.submit(function (e) {
     });
 });
 
-const verificarYConfirmarEliminacion = (id) => {
-    const modulo = $(`.modulo_${id}`);
-    const esActivo = modulo.find('td:nth-child(5)').text().trim() === 'Sí';
-
-    if (!esActivo) {
-        alerta('info', 'Operación no permitida', 'Este módulo ya está inactivo.');
-        return;
-    }
-
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: "Desactivar un modulo no elimina archivos",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: 'rgb(88 159 224)',
-        cancelButtonColor: 'rgb(230 95 95)',
-        confirmButtonText: 'Sí, eliminar!',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            eliminarModulo(id);
-        }
-    });
-};
 
 const eliminarModulo = (id) => {
     $.ajax({
