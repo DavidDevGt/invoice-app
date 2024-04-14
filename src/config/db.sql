@@ -39,8 +39,7 @@ CREATE TABLE usuario_perfil (
 
 CREATE TABLE permisos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL,
-    module_id INT,
+    module_id INT NOT NULL,
     usuario_id INT NOT NULL,
     escritura BOOLEAN DEFAULT FALSE,
     lectura BOOLEAN DEFAULT FALSE,
@@ -52,11 +51,14 @@ CREATE TABLE permisos (
 CREATE TABLE clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nit VARCHAR(45) NOT NULL,
-    nombre VARCHAR(200) NOT NULL,
-    direccion VARCHAR(200) NOT NULL,
+    nombre_comercial VARCHAR(200) NOT NULL,
+    direccion_facturacion VARCHAR(255) NOT NULL,
+    direccion_entrega VARCHAR(255) NOT NULL,
     telefono VARCHAR(45),
-    email VARCHAR(255),
+    correo VARCHAR(255),
     es_nit BOOLEAN DEFAULT TRUE,
+    limite_credito DECIMAL(20,2),
+    dias_credito INT NOT NULL DEFAULT 0,
     active BOOLEAN DEFAULT TRUE,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -99,8 +101,10 @@ CREATE TABLE facturas (
     total DECIMAL(20,2),
     serie VARCHAR(45),
     numero_factura INT,
+    direccion VARCHAR(255) NOT NULL,
     status INT DEFAULT 1, # 0 = Anulada, 1 = Creada, 2 = Rechazada, 3 = Firmada FEL, 4 = Pagado
     usuario_id INT NOT NULL,
+    observaciones TEXT,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
@@ -140,7 +144,9 @@ CREATE TABLE categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
-    active INT DEFAULT 1
+    active INT DEFAULT 1,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE subcategorias (
@@ -148,16 +154,21 @@ CREATE TABLE subcategorias (
     categoria_id INT NOT NULL,
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
-    active INT DEFAULT 1
+    active INT DEFAULT 1,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE articulos (
+CREATE TABLE articulosPRUEBA (
     id INT AUTO_INCREMENT PRIMARY KEY,
     codigo_articulo VARCHAR(255),
     nombre VARCHAR(255) NOT NULL,
     descripcion TEXT,
     unidad_medida_id INT NOT NULL,
     marca_id INT NOT NULL,
+    categoria_id INT NOT NULL,
+    subcategoria_id INT NOT NULL,
+    imagen VARCHAR(255) DEFAULT "noimage.png",
     active BOOLEAN DEFAULT TRUE,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -168,12 +179,16 @@ CREATE TABLE proveedores (
     codigo VARCHAR(255),
     nombre VARCHAR(255) NOT NULL,
     direccion VARCHAR(255),
-    telefono VARCHAR(45),
-    correo VARCHAR(255),
+    telefono1 VARCHAR(45),
+    telefono2 VARCHAR(45),
+    correo1 VARCHAR(255),
+    correo2 VARCHAR(255),
     nombre_contacto VAR CHAR(255),
     telefono_contacto VARCHAR(45),
     dias_credito INT NOT NULL DEFAULT 0,
     nit VARCHAR(100),
+    observaciones TEXT,
+    active BOOLEAN DEFAULT TRUE,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -184,6 +199,8 @@ CREATE TABLE matches_articulos (
     nombres_alternativos TEXT NOT NULL,
     proveedor_id INT NOT NULL,
     veces_matcheado INT DEFAULT 1, -- Cantidad de veces que se dio si a Match
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (articulo_id) REFERENCES articulos(id),
     FOREIGN KEY (proveedor_id) REFERENCES proveedores(id)
 );
@@ -192,7 +209,9 @@ CREATE TABLE tipos_precio (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL, -- Ejemplo: 'Publico', 'Mayorista', 'Super Mayorista'
     descripcion TEXT,
-    active BOOLEAN DEFAULT TRUE
+    active BOOLEAN DEFAULT TRUE,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Insertar tipos de precios
@@ -305,8 +324,6 @@ CREATE TABLE bitacora_facturas (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
-
-
 CREATE TABLE notificaciones (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
@@ -316,6 +333,18 @@ CREATE TABLE notificaciones (
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
+
+CREATE TABLE tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    task_type VARCHAR(255) NOT NULL,
+    task_data TEXT,
+    status INT NOT NULL DEFAULT 1, -- 1 Pendiente, 2 En proceso, 3 Completado, 4 Error
+    attempts INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    started_at TIMESTAMP NULL,
+    completed_at TIMESTAMP NULL
+);
+
 
 DELIMITER $$
 

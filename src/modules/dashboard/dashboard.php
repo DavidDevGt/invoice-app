@@ -3,6 +3,11 @@
 //** HEADER *//
 require_once './../../components/header/default.php';
 
+//** SECURITY *//
+require_once './../../components/security/middleware.php';
+
+$usuario_name = $_SESSION['usuario'];
+
 ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -23,7 +28,7 @@ require_once './../../components/header/default.php';
     </div>
     <!-- Contenido específico del módulo -->
     <div class="p-4 m-4 bg-white rounded shadow">
-        <h3 class="mt-3">Hola <span id="nombre_usuario">Usuario</span>,</h3>
+        <h3 class="mt-3">Hola <span id="nombre_usuario"><? $usuario_name; ?></span>,</h3>
         <h6 class="text-muted mt-2">Te damos la bienvenida al sistema.</h6>
 
         <div class="mt-3">

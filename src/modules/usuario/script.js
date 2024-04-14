@@ -1,20 +1,26 @@
 'use strict';
 
+
+
 $(document).ready(function () {
     $('#crearModulo').click(function () {
         mostrarModalCrearUsuario();
     });
 });
+
 mostrarUsuarios();
-// Evento de teclado en el input de búsqueda
+
 $('#busqueda').keyup(function () {
     let valorBusqueda = $(this).val();
-    mostrarUsuarios(valorBusqueda); // Pasar el término de búsqueda a la función
+    mostrarUsuarios(valorBusqueda);
 });
 
-// Cargar los roles al abrir el modal de crear usuario
+$('.btn-guardar-permisos').click(function () {
+    guardarCambiosPermisos();
+});
+
 function cargarRoles() {
-    console.log("Cargando roles..."); // Para depuración
+    // console.log("Cargando roles...");
 
     $.ajax({
         type: 'POST',
@@ -26,8 +32,8 @@ function cargarRoles() {
             roles.forEach(rol => {
                 opcionesRoles += `<option value="${rol.id}">${rol.nombre}</option>`;
             });
-            $('#create_rol_id').html(opcionesRoles); // Para el modal de crear usuario
-            $('#edit_rol_id').html(opcionesRoles); // Para el modal de editar usuario
+            $('#create_rol_id').html(opcionesRoles);
+            $('#edit_rol_id').html(opcionesRoles);
         }
     });
 }
@@ -40,11 +46,11 @@ function mostrarUsuarios(busqueda = '') {
         success: function (response) {
             let usuarios = JSON.parse(response);
             let filasUsuarios = '';
-            let resultadosEncontrados = false; // verificar si se encontraron resultados
+            let resultadosEncontrados = false;
 
             usuarios.forEach(usuario => {
                 if (usuario.usuario.includes(busqueda) || usuario.codigo.includes(busqueda)) {
-                    resultadosEncontrados = true; // Se encontraron resultados
+                    resultadosEncontrados = true;
                     filasUsuarios += `
                         <tr>
                             <td>${usuario.id}</td>
@@ -62,7 +68,7 @@ function mostrarUsuarios(busqueda = '') {
             });
 
             if (resultadosEncontrados) {
-                $('#tablebody').html(filasUsuarios); // Mostrar los resultados
+                $('#tablebody').html(filasUsuarios);
             } else {
                 $('#tablebody').html(`<tr><td colspan="6" class="text-center">No se encontraron resultados</td></tr>`);
             }
@@ -76,6 +82,45 @@ function mostrarModalPermisos(usuario, id) {
     $('#usuario').html(usuario);
     $('#usuario_select').val(id);
     cargarModulos(id);
+}
+
+function cargarPermisosUsuario(usuarioId) {
+    $.ajax({
+        type: 'POST',
+        url: 'ajax.php',
+        data: { accion: 'cargar_permisos_usuario', usuario_id: usuarioId },
+        success: function (response) {
+            // console.log("Respuesta recibida:", response);
+
+            try {
+                const permisos = JSON.parse(response);
+
+                Object.keys(permisos).forEach(function (moduloId) {
+                    const permiso = permisos[moduloId];
+                    const lecturaCheckbox = $(`#lectura-${moduloId}`);
+                    const escrituraCheckbox = $(`#escritura-${moduloId}`);
+                    const ambosCheckbox = $(`#ambos-${moduloId}`);
+
+                    if (permiso.lectura == 1) {
+                        lecturaCheckbox.prop('checked', true);
+                    }
+
+                    if (permiso.escritura == 1) {
+                        escrituraCheckbox.prop('checked', true);
+                    }
+
+                    if (permiso.lectura == 1 && permiso.escritura == 1) {
+                        ambosCheckbox.prop('checked', true);
+                    }
+                });
+            } catch (error) {
+                console.error("Error al procesar la respuesta JSON:", error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error en la solicitud AJAX: " + status + " - " + error);
+        }
+    });
 }
 
 function cargarModulos(usuarioId) {
@@ -149,6 +194,7 @@ function cargarSubmodulos(moduloPadreId, usuarioId) {
                     `;
                 });
                 $(`#modulosHijos-${moduloPadreId}`).addClass('loaded').html(submodulosHtml);
+                cargarPermisosUsuario(usuarioId);
             }
         });
     }
@@ -162,6 +208,47 @@ function seleccionarAmbos(submoduloId) {
 
     lecturaCheck.prop('checked', ambosCheck);
     escrituraCheck.prop('checked', ambosCheck);
+}
+
+function guardarCambiosPermisos() {
+    const usuarioId = $('#usuario_select').val();
+    const permisos = {};
+
+    // Recorrer todos los checkboxes de permisos y guardar su estado
+    $('input[type="checkbox"]').each(function () {
+        const id = $(this).attr('id').split('-')[1];
+        const tipoPermiso = $(this).attr('id').split('-')[0];
+        const isChecked = $(this).is(':checked');
+
+        if (!permisos[id]) {
+            permisos[id] = { 'module_id': id };
+        }
+
+        if (tipoPermiso === 'lectura') {
+            permisos[id]['lectura'] = isChecked ? 1 : 0;
+        } else if (tipoPermiso === 'escritura') {
+            permisos[id]['escritura'] = isChecked ? 1 : 0;
+        }
+    });
+
+    $.ajax({
+        type: 'POST',
+        url: 'ajax.php',
+        data: { accion: 'actualizar_permisos', usuario_id: usuarioId, permisos: permisos },
+        success: function (response) {
+            const resultado = JSON.parse(response);
+            if (resultado.success) {
+                alerta('success', '¡Éxito!', 'Los permisos se han actualizado correctamente.');
+                $('#exampleModal').modal('hide');
+            } else {
+                alerta('error', '¡Error!', 'Hubo un error al actualizar los permisos.');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error en AJAX: " + status + " - " + error);
+            alerta('error', '¡Error!', 'Hubo un error al actualizar los permisos.');
+        }
+    });
 }
 
 // Mostrar modal para crear un nuevo usuario

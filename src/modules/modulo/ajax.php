@@ -4,6 +4,7 @@
 // error_reporting(E_ALL);
 
 require_once "./../../config/db_functions.php";
+require_once './../../components/security/ajax_middleware.php';
 
 $accion = $_POST['accion'] ?? $_GET['accion'] ?? '';
 
@@ -48,9 +49,9 @@ function crearModulo()
     $nombre_modulo = sanitizeInput($_POST['nombre_modulo']);
     $orden = sanitizeInput($_POST['orden']);
     $ruta = sanitizeInput($_POST['ruta']);
-    $padre_id = sanitizeInput($_POST['padre_id']);
+    $padre_id = isset($_POST['padre_id']) ? sanitizeInput($_POST['padre_id']) : 'null';
 
-    $sql = "INSERT INTO modulos (nombre, orden, ruta, padre_id) VALUES ('$nombre_modulo', '$orden', '$ruta', '$padre_id')";
+    $sql = "INSERT INTO modulos (nombre, orden, ruta, padre_id) VALUES ('$nombre_modulo', '$orden', '$ruta', $padre_id)";
 
     $result = dbQuery($sql);
 
@@ -68,11 +69,12 @@ function actualizarModulo() {
     $orden = sanitizeInput($_POST['orden']);
     $ruta = sanitizeInput($_POST['ruta']);
     $tipo = sanitizeInput($_POST['tipoModuloEditar']);
-    $padre_id = isset($_POST['padre_id']) ? sanitizeInput($_POST['padre_id']) : null;
+    $padre_id = !empty($_POST['padre_id']) ? sanitizeInput($_POST['padre_id']) : 'null';
     $activo = sanitizeInput($_POST['activoModuloEditar']);
 
     // Supongamos que este es el SQL para actualizar
     $sql = "UPDATE modulos SET nombre = '$nombre', orden = $orden, ruta = '$ruta', padre_id = $padre_id, active = $activo WHERE id = $id";
+    //error_log($sql);
     $result = dbQuery($sql);
 
     if ($result) {
@@ -89,7 +91,7 @@ function eliminarModulo()
 
     $sql = "UPDATE modulos SET active = 0 WHERE id = $id";
 
-    error_log($sql);
+    //error_log($sql);
 
     try {
         $result = dbQuery($sql);

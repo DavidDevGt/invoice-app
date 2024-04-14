@@ -20,7 +20,8 @@ function dbQueryInsert($sql)
     return $lastId;
 }
 
-function dbQueryUpdate($sql) {
+function dbQueryUpdate($sql)
+{
     $conn = getDbConnection();
     if (!$conn) {
         throw new Exception("No se pudo conectar a la base de datos.");
@@ -77,7 +78,26 @@ function dbQueryPreparedInsert($sql, $types, $params)
     return $lastId;
 }
 
-// Navbar
+// Navbar functions
+function tienePermisoLectura($usuarioId, $moduloId)
+{
+    $conn = getDbConnection();
+
+    $sql = "SELECT 1 FROM permisos WHERE usuario_id = $usuarioId AND module_id = $moduloId AND lectura = 1 AND active = 1 LIMIT 1";
+
+    $result = $conn->query($sql);
+
+    if ($result) {
+        $exists = mysqli_num_rows($result) > 0;
+        mysqli_free_result($result);  // Liberar el resultado
+        return $exists;
+    } else {
+        error_log('Error en consulta de permisos: ' . $conn->error);
+        return false;
+    }
+}
+
+
 function getBaseURL()
 {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
@@ -85,7 +105,8 @@ function getBaseURL()
     $uriParts = explode('/', $_SERVER['REQUEST_URI']);
     $dirPath = '';
     foreach ($uriParts as $part) {
-        if ($part == 'src') break;
+        if ($part == 'src')
+            break;
         $dirPath .= $part . '/';
     }
     $baseURL = $protocol . '://' . $host . '' . $dirPath . 'src/';

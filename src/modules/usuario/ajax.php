@@ -4,6 +4,8 @@
 // error_reporting(E_ALL);
 
 require_once "./../../config/db_functions.php";
+require_once './../../components/security/ajax_middleware.php';
+
 
 $accion = $_POST['accion'] ?? $_GET['accion'] ?? '';
 
@@ -90,23 +92,28 @@ switch ($accion) {
         $usuario_id = $_POST["usuario_id"];
         $permisos = $_POST["permisos"];
 
+        $conn = getDbConnection();
+
         foreach ($permisos as $permiso) {
             $module_id = $permiso['module_id'];
             $escritura = $permiso['escritura'];
             $lectura = $permiso['lectura'];
 
             $sql = "SELECT id FROM permisos WHERE usuario_id = $usuario_id AND module_id = $module_id";
-            $query = dbQuery($sql);
-            if (dbFetchAssoc($query)) {
+            $query = $conn->query($sql);
+            if ($query && $query->num_rows > 0) {
                 $sql = "UPDATE permisos SET escritura = $escritura, lectura = $lectura WHERE usuario_id = $usuario_id AND module_id = $module_id";
             } else {
                 $sql = "INSERT INTO permisos (usuario_id, module_id, escritura, lectura) VALUES ($usuario_id, $module_id, $escritura, $lectura)";
             }
-            dbQuery($sql);
+            $conn->query($sql);
         }
+
+        $conn->close();
 
         echo json_encode(['success' => true]);
         break;
+
 
     case "obtener_permisos_usuarios":
         // Obtener permisos
@@ -221,5 +228,23 @@ switch ($accion) {
             }
             echo json_encode($response);
         }
+        break;
+
+    case "cargar_permisos_usuario":
+        $usuario_id = $_POST["usuario_id"];
+        $sql = "SELECT * FROM permisos WHERE usuario_id = $usuario_id AND active = TRUE";
+        $query = dbQuery($sql);
+        $permisos = [];
+        while ($row = dbFetchAssoc($query)) {
+            $permisos[$row['module_id']] = [
+                'lectura' => $row['lectura'],
+                'escritura' => $row['escritura']
+            ];
+        }
+        echo json_encode($permisos);
+        break;
+
+    default:
+        echo json_encode(['error' => 'Acción no reconocida']);
         break;
 }

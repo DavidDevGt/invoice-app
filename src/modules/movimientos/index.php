@@ -17,19 +17,19 @@ require_once './../../components/security/middleware.php';
                 <!-- Breadcrumb deberia ir aca -->
                 <?php require_once './../../components/shared/breadcrumb.php'; ?>
             </div>
-            <div class="col-3 mt-2 pt-3 text-center"></div>
-            <div class="col-6 mt-2 pt-3 text-end">
+            <div class="col-6 mt-2 pt-3 text-center"></div>
+            <div class="col-3 mt-2 pt-3 text-end">
                 <!-- Area para botones en la parte de arriba -->
             </div>
         </div>
     </div>
 
 
-    <!-- Contenido específico del módulo -->
-    <div class="p-4 m-4 bg-white rounded"></div>
-
+    <!-- Aquí va el contenido específico del módulo -->
+    <div class="p-4 m-4 bg-white rounded">
+        <h1 class="text-center mt-3">Bienvenido</h1>
+    </div>
 </body>
-
 <?php
 
 //** FOOTER *//

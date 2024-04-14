@@ -3,6 +3,8 @@
 //** HEADER *//
 require_once './../../components/header/default.php';
 
+//** SECURITY *//
+require_once './../../components/security/middleware.php';
 ?>
 
 <body class="bg-body-secondary">
@@ -72,6 +74,9 @@ require_once './../../components/header/default.php';
                     <div class="accordion" id="accordionPermisos">
                         <!-- Los módulos se cargarán aquí dinámicamente -->
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-guardar-permisos">Guardar cambios</button>
                 </div>
             </div>
         </div>

@@ -4,7 +4,9 @@
 // error_reporting(E_ALL);
 
 session_start();
-include './src/config/db.php';
+include './src/config/db_functions.php';
+
+session_regenerate_id(true);
 
 if (isset($_SESSION['usuario_id'])) {
     header('Location: src/modules/dashboard/dashboard.php');
@@ -12,8 +14,8 @@ if (isset($_SESSION['usuario_id'])) {
 }
 
 if (isset($_POST['fnc']) && $_POST['fnc'] == "login") {
-    $usuario = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
+    $usuario = sanitizeInput($_POST['username']);
+    $password = sanitizeInput($_POST['password']);
 
     if ($usuario !== '' && $password !== '') {
         $conn = getDbConnection();
@@ -27,8 +29,10 @@ if (isset($_POST['fnc']) && $_POST['fnc'] == "login") {
         if ($user && password_verify($password, $user['password'])) {
 
             $_SESSION['usuario_id'] = $user['id'];
-            $_SESSION['usuario'] = $user['usuario'];
+            $_SESSION['usuario'] = htmlspecialchars($user['usuario'], ENT_QUOTES, 'UTF-8');
             $_SESSION['rol_id'] = $user['rol_id'];
+
+
 
             echo json_encode(['success' => true]);
         } else {

@@ -1,5 +1,9 @@
 <?php
 
+//** SECURITY *//
+require_once './../../components/security/middleware.php';
+
+
 //** HEADER *//
 require_once './../../components/header/default.php';
 
