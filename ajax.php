@@ -5,6 +5,10 @@ error_reporting(E_ALL);
 
 session_start();
 
+// Configura el tiempo de vida de la sesión
+$tiempo_vida_sesion = 4 * 60 * 60; // 4 horas
+session_set_cookie_params($tiempo_vida_sesion);
+
 include './src/config/db_functions.php';
 
 session_regenerate_id(true);
@@ -34,6 +38,8 @@ if (isset($_POST['fnc']) && $_POST['fnc'] == "login") {
             $_SESSION['rol_id'] = $user['rol_id'];
 
             error_log("Inicio de sesión exitoso para usuario: " . $_SESSION['usuario']);
+            error_log("Rol ID: " . $_SESSION['rol_id']);
+            error_log("Usuario ID: " . $_SESSION['usuario_id']);
 
             echo json_encode(['success' => true]);
         } else {
