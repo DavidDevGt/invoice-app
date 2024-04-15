@@ -11,8 +11,6 @@ session_set_cookie_params($tiempo_vida_sesion);
 
 include './src/config/db_functions.php';
 
-session_regenerate_id(true);
-
 if (isset($_SESSION['usuario_id'])) {
     header('Location: src/modules/dashboard/dashboard.php');
     exit;
