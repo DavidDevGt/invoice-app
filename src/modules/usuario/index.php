@@ -31,6 +31,16 @@ require_once './../../components/security/middleware.php';
         <!-- Titulo -->
         <section class="container mt-5">
             <div class="row">
+                <p><?
+                    echo "<br>";
+                    echo "Detalles de sesión:";
+                    echo "<br>";
+                    echo "ID de usuario: " . ($_SESSION['usuario_id'] ?? 'No definido');
+                    echo "<br>";
+                    echo "Usuario: " . ($_SESSION['usuario'] ?? 'No definido');
+                    echo "<br>";
+                    echo "ID de rol: " . ($_SESSION['rol_id'] ?? 'No definido');
+                ?></p>
                 <div class="col-md-6">
                     <h3>Usuarios</h3>
                 </div>
