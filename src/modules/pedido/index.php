@@ -119,9 +119,6 @@ require_once './../../components/security/middleware.php';
         </div>
     </div>
 
-    <div class="p-4 m-4 bg-white rounded">
-    <?php phpinfo(); ?>
-    </div>
 </body>
 
 <?php
