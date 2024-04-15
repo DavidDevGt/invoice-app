@@ -22,9 +22,6 @@ if (!isAuthenticated()) {
     echo "Usuario: " . ($_SESSION['usuario'] ?? 'No definido');
     echo "<br>";
     echo "ID de rol: " . ($_SESSION['rol_id'] ?? 'No definido');
-    
-    echo "<div class='p-4 m-4 bg-white rounded'>
-    <?php phpinfo(); ?>
-    </div>";
+
     exit;
 }
