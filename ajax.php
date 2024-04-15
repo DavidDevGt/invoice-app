@@ -18,9 +18,6 @@ if (isset($_POST['fnc']) && $_POST['fnc'] == "login") {
     $usuario = sanitizeInput($_POST['username']);
     $password = sanitizeInput($_POST['password']);
 
-    error_log("Usuario: $usuario, Contraseña: $password");
-
-
     if ($usuario !== '' && $password !== '') {
         $conn = getDbConnection();
 
@@ -31,16 +28,15 @@ if (isset($_POST['fnc']) && $_POST['fnc'] == "login") {
         $user = $result->fetch_assoc();
 
         if ($user && password_verify($password, $user['password'])) {
-            error_log("Inicio de sesión exitoso para el usuario: $usuario");
 
             $_SESSION['usuario_id'] = $user['id'];
             $_SESSION['usuario'] = htmlspecialchars($user['usuario'], ENT_QUOTES, 'UTF-8');
             $_SESSION['rol_id'] = $user['rol_id'];
 
+            error_log("Inicio de sesión exitoso para usuario: " . $_SESSION['usuario']);
+
             echo json_encode(['success' => true]);
         } else {
-            error_log("Inicio de sesión fallido para el usuario: $usuario");
-
             echo json_encode(['success' => false, 'error' => 'Credenciales incorrectas. Por favor, intentar de nuevo.']);
         }
         $stmt->close();
