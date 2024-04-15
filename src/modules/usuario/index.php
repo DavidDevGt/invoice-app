@@ -31,21 +31,16 @@ require_once './../../components/security/middleware.php';
         <!-- Titulo -->
         <section class="container mt-5">
             <div class="row">
-                <p><?
-                    echo "<br>";
-                    echo "Detalles de sesión:";
-                    echo "<br>";
-                    echo "ID de usuario: " . ($_SESSION['usuario_id'] ?? 'No definido');
-                    echo "<br>";
-                    echo "Usuario: " . ($_SESSION['usuario'] ?? 'No definido');
-                    echo "<br>";
-                    echo "ID de rol: " . ($_SESSION['rol_id'] ?? 'No definido');
-                ?></p>
+                <p>Detalles de sesión:</p>
+                <p>ID de usuario: <?php echo $_SESSION['usuario_id'] ?? 'No definido'; ?></p>
+                <p>Usuario: <?php echo $_SESSION['usuario'] ?? 'No definido'; ?></p>
+                <p>ID de rol: <?php echo $_SESSION['rol_id'] ?? 'No definido'; ?></p>
                 <div class="col-md-6">
                     <h3>Usuarios</h3>
                 </div>
                 <div class="col-md-6">
-                    <input class="form-control w-100" type="text" id="busqueda" placeholder="Buscar por codigo o username...">
+                    <input class="form-control w-100" type="text" id="busqueda"
+                        placeholder="Buscar por codigo o username...">
                 </div>
             </div>
 
@@ -76,7 +71,8 @@ require_once './../../components/security/middleware.php';
             <div class="modal-content">
                 <div class="modal-body border-0">
                     <div class="modal-header border-0">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="bi bi-key-fill"></i> &nbsp; Permisos de <span id="usuario"></span></h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="bi bi-key-fill"></i> &nbsp;
+                            Permisos de <span id="usuario"></span></h1>
                         <input type="hidden" id="usuario_select">
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -133,7 +129,8 @@ require_once './../../components/security/middleware.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" onclick="guardarCambiosUsuario()">Guardar cambios</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarCambiosUsuario()">Guardar
+                        cambios</button>
                 </div>
             </div>
         </div>
@@ -145,7 +142,8 @@ require_once './../../components/security/middleware.php';
             <div class="modal-content">
                 <div class="modal-body border-0">
                     <div class="modal-header border-0">
-                        <h1 class="modal-title fs-5" id="createModalLabel"><i class="bi bi-key-fill"></i> &nbsp; Agregar usuario <span id="usuario"></span></h1>
+                        <h1 class="modal-title fs-5" id="createModalLabel"><i class="bi bi-key-fill"></i> &nbsp; Agregar
+                            usuario <span id="usuario"></span></h1>
                         <input type="hidden" id="usuario_select_edit">
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -154,15 +152,18 @@ require_once './../../components/security/middleware.php';
                         <form class="row row-cols-2">
                             <div class="mb-3">
                                 <label for="usuario" class="form-label">Usuario</label>
-                                <input type="text" class="form-control" placeholder="Introduce el username" id="create_usuario" autocomplete="off" value="">
+                                <input type="text" class="form-control" placeholder="Introduce el username"
+                                    id="create_usuario" autocomplete="off" value="">
                             </div>
                             <div class="mb-3">
                                 <label for="usuario" class="form-label">Código</label>
-                                <input type="text" class="form-control" id="create_codigo" placeholder="Introduce el código" value="">
+                                <input type="text" class="form-control" id="create_codigo"
+                                    placeholder="Introduce el código" value="">
                             </div>
                             <div class="mb-3">
                                 <label for="text" class="form-label">Contraseña</label>
-                                <input type="text" class="form-control" id="create_password" placeholder="Introduce la contraseña" value="">
+                                <input type="text" class="form-control" id="create_password"
+                                    placeholder="Introduce la contraseña" value="">
                             </div>
                             <div class="mb-3">
                                 <label for="create_rol_id" class="form-label">Rol</label>
@@ -172,7 +173,8 @@ require_once './../../components/security/middleware.php';
                             </div>
                         </form>
                         <div class="mb-3 mt-4">
-                            <button onclick="crearUsuario()" class="btn btn-success" id="create_save" type="button">Crear usuario</button>
+                            <button onclick="crearUsuario()" class="btn btn-success" id="create_save"
+                                type="button">Crear usuario</button>
                         </div>
 
                     </div>
