@@ -1,26 +1,17 @@
 <?php
-session_start();
+require_once './../../../vendor/autoload.php';
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
-function isAuthenticated()
-{
-    return isset($_SESSION['usuario_id']) && isset($_SESSION['usuario']) && isset($_SESSION['rol_id']);
-}
+$key = "]ymHeM;}]\yG;-6TKA@p.:i8SHrlR-:PTXmRFfPPb";
 
-// if (!isAuthenticated()) {
-//     echo "No tienes permiso para ver esta página. Por favor, inicia sesión.";
-//     exit;
-// }
+$headers = getallheaders();
+$token = $headers['Authorization'] ?? '';
 
-if (!isAuthenticated()) {
+try {
+    $decoded = JWT::decode($token, new Key($key, 'HS256'));
+    // Aquí puedes agregar más lógica para verificar los roles o permisos específicos
+} catch (Exception $e) {
     echo "No tienes permiso para ver esta página. Por favor, inicia sesión.";
-    echo "<br>";
-    echo "Detalles de sesión:";
-    echo "<br>";
-    echo "ID de usuario: " . ($_SESSION['usuario_id'] ?? 'No definido');
-    echo "<br>";
-    echo "Usuario: " . ($_SESSION['usuario'] ?? 'No definido');
-    echo "<br>";
-    echo "ID de rol: " . ($_SESSION['rol_id'] ?? 'No definido');
-
     exit;
 }
