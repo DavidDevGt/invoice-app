@@ -7,14 +7,14 @@ $(document).ready(function () {
     });
 
     document.addEventListener('keydown', function(e) {
-        console.log("Código de tecla presionada:", e.keyCode); // Agregamos este console.log para ver el código de la tecla presionada
+        console.log("Tecla presionada:", e.key); // Imprimimos la tecla presionada en la consola
         
-        if (e.keyCode === 13 && (document.activeElement === document.getElementById('username') || document.activeElement === document.getElementById('password'))) {
+        if (e.key === "Enter" && (document.activeElement === document.getElementById('username') || document.activeElement === document.getElementById('password'))) {
             e.preventDefault();
             attemptLogin();
         }
-    });    
-
+    });
+    
     $(document).on("click", ".toggle-password", togglePasswordVisibility);
 
     function setAuthToken() {
