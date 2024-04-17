@@ -11,9 +11,7 @@ $(document).ready(function () {
         }
     }
 
-    $("#btn_login").click(function (e) {
-        e.preventDefault();
-
+    function login() {
         var dataObj = {
             username: $("#username").val(),
             password: $("#password").val(),
@@ -30,7 +28,7 @@ $(document).ready(function () {
                     localStorage.setItem('jwt', data.token);
                     localStorage.setItem('username', data.username);
                     setAuthToken();
-                    window.location.href = "./src/modules/usuario/index.php";
+                    window.location.href = "./src/modules/dashboard/dashboard.php";
                 } else {
                     Swal.fire({
                         icon: "error",
@@ -48,6 +46,18 @@ $(document).ready(function () {
                 });
             },
         });
+    }
+
+    $("#btn_login").click(function (e) {
+        e.preventDefault();
+        login();
+    });
+
+    $("#username, #password").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            login();
+        }
     });
 
     // Cargar si ya esta
