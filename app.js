@@ -11,10 +11,22 @@ $(document).ready(function () {
         }
     }
 
-    function login() {
+    function attemptLogin() {
+        var username = $("#username").val();
+        var password = $("#password").val();
+
+        if (username === "" || password === "") {
+            Swal.fire({
+                icon: "warning",
+                title: "Atención",
+                text: "Por favor, complete todos los campos requeridos.",
+            });
+            return; // Detener la función si hay campos vacíos
+        }
+
         var dataObj = {
-            username: $("#username").val(),
-            password: $("#password").val(),
+            username: username,
+            password: password,
             fnc: "login",
         };
 
@@ -50,17 +62,16 @@ $(document).ready(function () {
 
     $("#btn_login").click(function (e) {
         e.preventDefault();
-        login();
+        attemptLogin();
     });
 
-    $("#username, #password").keypress(function (e) {
-        if (e.which == 13) {
+    $(document).on('keypress',function(e) {
+        if(e.which == 13) {
             e.preventDefault();
-            login();
+            attemptLogin();
         }
     });
 
-    // Cargar si ya esta
     setAuthToken();
 
     $(document).on("click", ".toggle-password", function () {
