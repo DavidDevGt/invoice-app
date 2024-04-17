@@ -8,10 +8,16 @@ $key = "]ymHeM;}]\yG;-6TKA@p.:i8SHrlR-:PTXmRFfPPb";
 $headers = getallheaders();
 $token = $headers['Authorization'] ?? '';
 
+if (preg_match('/Bearer\s(\S+)/', $token, $matches)) {
+    $token = $matches[1];  // Extrae el token del encabezado
+}
+
 try {
     $decoded = JWT::decode($token, new Key($key, 'HS256'));
-    // Aquí puedes agregar más lógica para verificar los roles o permisos específicos
+    echo json_encode(['status' => 'success', 'message' => 'Token verified']);
+    exit;
 } catch (Exception $e) {
-    echo "No tienes permiso para ver esta página. Por favor, inicia sesión.";
+    http_response_code(401); // No autorizado
+    echo json_encode(['status' => 'error', 'message' => 'Invalid token']);
     exit;
 }

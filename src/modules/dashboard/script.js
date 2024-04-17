@@ -2,3 +2,6 @@
 
 const nombreFuncion = () => { };
 
+$(document).ready(function () {
+    verifyToken();
+});

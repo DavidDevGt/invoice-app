@@ -1,8 +1,8 @@
 'use strict';
 
-
-
 $(document).ready(function () {
+    verifyToken();
+
     $('#crearModulo').click(function () {
         mostrarModalCrearUsuario();
     });

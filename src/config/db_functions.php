@@ -97,7 +97,6 @@ function tienePermisoLectura($usuarioId, $moduloId)
     }
 }
 
-
 function getBaseURL()
 {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
@@ -112,7 +111,6 @@ function getBaseURL()
     $baseURL = $protocol . '://' . $host . '' . $dirPath . 'src/';
     return rtrim($baseURL, '/') . '/';
 }
-
 
 function getModulosPadre()
 {

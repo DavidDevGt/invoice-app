@@ -3,10 +3,7 @@
 //** HEADER *//
 require_once './../../components/header/default.php';
 
-//** SECURITY *//
-require_once './../../components/security/middleware.php';
 ?>
-
 <body class="bg-body-secondary">
 
     <?php require_once './../../components/shared/navbar.php'; ?>

@@ -2,4 +2,6 @@
 
 const nombreFuncion = () => {};
 
-$(document).ready(function () {});
+$(document).ready(function () {
+    verifyToken(); // Función que verifica si el token de sesión es válido
+});

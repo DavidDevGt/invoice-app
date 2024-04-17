@@ -3,11 +3,6 @@
 //** HEADER *//
 require_once './../../components/header/default.php';
 
-//** SECURITY *//
-require_once './../../components/security/middleware.php';
-
-$usuario_name = $_SESSION['usuario'];
-
 ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -28,7 +23,7 @@ $usuario_name = $_SESSION['usuario'];
     </div>
     <!-- Contenido específico del módulo -->
     <div class="p-4 m-4 bg-white rounded shadow">
-        <h3 class="mt-3">Hola <span id="nombre_usuario"><? $usuario_name; ?></span>,</h3>
+        <h3 class="mt-3">Hola, <span id="nombre_usuario"></span></h3>
         <h6 class="text-muted mt-2">Te damos la bienvenida al sistema.</h6>
 
         <div class="mt-3">
@@ -74,6 +69,9 @@ $usuario_name = $_SESSION['usuario'];
     ?>
 
     <script>
+        const username = localStorage.getItem('username');
+        document.getElementById('nombre_usuario').textContent = username;
+        
         let weeklyLabels = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sáb'];
         let monthlyLabels = ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'];
         let yearlyLabels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];

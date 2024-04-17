@@ -23,11 +23,11 @@ require_once "./../../config/db_functions.php"; ?>
         <div class="collapse navbar-collapse" id="navbarLeftAlignExample">
 <!-- Left links -->
 <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
-                <?php
-                if (!isset($_SESSION['usuario_id'])) {
+<?php
+                $usuarioId = $_COOKIE['user_id'] ?? null;
+                if (!$usuarioId) {
                     error_log("ID de usuario no encontrado en la sesión.");
                 } else {
-                    $usuarioId = $_SESSION['usuario_id'];
                     $resultPadres = getModulosPadre(); // Obtiene módulos padre
                     if (!$resultPadres) {
                         error_log("Error al obtener módulos padre.");

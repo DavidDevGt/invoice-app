@@ -1,7 +1,18 @@
 $(document).ready(function () {
-    // Cambiamos el selector a clase del botón ya que no estamos usando un formulario
+
+    function setAuthToken() {
+        const token = localStorage.getItem('jwt');
+        if (token) {
+            $.ajaxSetup({
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+        }
+    }
+
     $("#btn_login").click(function (e) {
-        e.preventDefault(); // Evita el comportamiento por defecto del botón
+        e.preventDefault();
 
         var dataObj = {
             username: $("#username").val(),
@@ -16,6 +27,9 @@ $(document).ready(function () {
             dataType: "json",
             success: function (data) {
                 if (data.success) {
+                    localStorage.setItem('jwt', data.token);
+                    localStorage.setItem('username', data.username);
+                    setAuthToken();
                     window.location.href = "src/modules/usuario/index.php";
                 } else {
                     Swal.fire({
@@ -35,6 +49,9 @@ $(document).ready(function () {
             },
         });
     });
+
+    // Cargar si ya esta
+    setAuthToken();
 
     $(document).on("click", ".toggle-password", function () {
         let input = $("#password");

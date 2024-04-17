@@ -3,8 +3,6 @@
 //** HEADER *//
 require_once './../../components/header/default.php';
 
-//** SECURITY *//
-require_once './../../components/security/middleware.php';
 ?>
 
 <body class="bg-body-secondary">
@@ -31,10 +29,6 @@ require_once './../../components/security/middleware.php';
         <!-- Titulo -->
         <section class="container mt-5">
             <div class="row">
-                <p>Detalles de sesión:</p>
-                <p>ID de usuario: <?php echo $_SESSION['usuario_id'] ?? 'No definido'; ?></p>
-                <p>Usuario: <?php echo $_SESSION['usuario'] ?? 'No definido'; ?></p>
-                <p>ID de rol: <?php echo $_SESSION['rol_id'] ?? 'No definido'; ?></p>
                 <div class="col-md-6">
                     <h3>Usuarios</h3>
                 </div>

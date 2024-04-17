@@ -27,7 +27,7 @@ if (isset($_POST['fnc']) && $_POST['fnc'] == "login") {
         if ($user && password_verify($password, $user['password'])) {
             $payload = [
                 'iat' => $time,
-                'exp' => $time + (4 * 60 * 60),  // Token expira en 4 horas
+                'exp' => $time + (12 * 60 * 60),  // 12 horas
                 'sub' => $user['id'],
                 'data' => [
                     'usuario_id' => $user['id'],
@@ -36,8 +36,11 @@ if (isset($_POST['fnc']) && $_POST['fnc'] == "login") {
                 ]
             ];
 
+            $username = $user['usuario'];
             $jwt = JWT::encode($payload, $key, 'HS256');
-            echo json_encode(['success' => true, 'token' => $jwt]);
+            setcookie("user_id", $user['id'], $time + (12 * 60 * 60), "/", "", true, true); // HttpOnly y Secure 12 hrs
+
+            echo json_encode(['success' => true, 'token' => $jwt, 'username' => $username]);
         } else {
             echo json_encode(['success' => false, 'error' => 'Credenciales incorrectas. Por favor, intentar de nuevo.']);
         }

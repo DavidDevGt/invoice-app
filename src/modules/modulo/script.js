@@ -1,6 +1,7 @@
 "use strict";
 
 $(document).ready(function () {
+    verifyToken();
     cargarModulos();
 
     $('#crearModulo').click(function () {
