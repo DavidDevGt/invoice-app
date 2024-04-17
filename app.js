@@ -68,6 +68,7 @@ $(document).ready(function () {
     $(document).on('keypress',function(e) {
         if(e.which == 13) {
             e.preventDefault();
+            console.log("Enter pressed");
             attemptLogin();
         }
     });
