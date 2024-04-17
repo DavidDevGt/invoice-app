@@ -6,15 +6,14 @@ $(document).ready(function () {
         attemptLogin();
     });
 
-    $(document).on('keyup', function (e) {
-        console.log("Código de tecla presionada:", e.which); // Agregamos este console.log para ver el código de la tecla presionada
+    document.addEventListener('keydown', function(e) {
+        console.log("Código de tecla presionada:", e.keyCode); // Agregamos este console.log para ver el código de la tecla presionada
         
-        if (e.which === 13 && ($("#username").is(":focus") || $("#password").is(":focus"))) {
+        if (e.keyCode === 13 && (document.activeElement === document.getElementById('username') || document.activeElement === document.getElementById('password'))) {
             e.preventDefault();
             attemptLogin();
         }
-    });
-    
+    });    
 
     $(document).on("click", ".toggle-password", togglePasswordVisibility);
 
