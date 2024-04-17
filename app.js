@@ -7,11 +7,14 @@ $(document).ready(function () {
     });
 
     $(document).on('keypress', function (e) {
-        if (e.which === 13 && $("#username").is(":focus") || $("#password").is(":focus")) {
+        console.log("Código de tecla presionada:", e.which); // Agregamos este console.log para ver el código de la tecla presionada
+        
+        if (e.which === 13 && ($("#username").is(":focus") || $("#password").is(":focus"))) {
             e.preventDefault();
             attemptLogin();
         }
     });
+    
 
     $(document).on("click", ".toggle-password", togglePasswordVisibility);
 
