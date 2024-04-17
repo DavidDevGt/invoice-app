@@ -6,7 +6,6 @@
 require_once "./../../config/db_functions.php";
 require_once './../../components/security/ajax_middleware.php';
 
-
 $accion = $_POST['accion'] ?? $_GET['accion'] ?? '';
 
 switch ($accion) {
@@ -108,6 +107,8 @@ switch ($accion) {
             }
             $conn->query($sql);
         }
+
+        actualizarPermisosPadre($usuario_id, $conn);
 
         $conn->close();
 
@@ -247,4 +248,24 @@ switch ($accion) {
     default:
         echo json_encode(['error' => 'Acción no reconocida']);
         break;
+}
+
+function actualizarPermisosPadre($usuario_id, $conn) {
+    // Obtener todos los módulos padre
+    $sqlPadres = "SELECT id FROM modulos WHERE padre_id IS NULL";
+    $resultadoPadres = $conn->query($sqlPadres);
+
+    while ($padre = $resultadoPadres->fetch_assoc()) {
+        $padreId = $padre['id'];
+        $sqlHijos = "SELECT module_id FROM permisos WHERE usuario_id = $usuario_id AND module_id IN (SELECT id FROM modulos WHERE padre_id = $padreId) AND lectura = 1";
+        $resultadoHijos = $conn->query($sqlHijos);
+
+        if ($resultadoHijos->num_rows > 0) {
+            $sqlUpdatePadre = "INSERT INTO permisos (usuario_id, module_id, escritura, lectura) VALUES ($usuario_id, $padreId, 1, 1) ON DUPLICATE KEY UPDATE lectura = 1, escritura = 1";
+            $conn->query($sqlUpdatePadre);
+        } else {
+            $sqlRemovePadre = "UPDATE permisos SET active = 0 WHERE usuario_id = $usuario_id AND module_id = $padreId";
+            $conn->query($sqlRemovePadre);
+        }
+    }
 }

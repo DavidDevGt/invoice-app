@@ -208,7 +208,14 @@ function seleccionarAmbos(submoduloId) {
 
     lecturaCheck.prop('checked', ambosCheck);
     escrituraCheck.prop('checked', ambosCheck);
+
+    // Actualizar los permisos en el objeto `permisos` si es necesario
+    if (permisos[submoduloId]) {
+        permisos[submoduloId]['lectura'] = ambosCheck ? 1 : 0;
+        permisos[submoduloId]['escritura'] = ambosCheck ? 1 : 0;
+    }
 }
+
 
 function guardarCambiosPermisos() {
     const usuarioId = $('#usuario_select').val();
