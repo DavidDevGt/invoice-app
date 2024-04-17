@@ -1,11 +1,11 @@
 <?php
-require_once './vendor/autoload.php';
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-
 ini_set('log_errors', 1);
 ini_set('error_log', './errors.log');
 error_reporting(E_ALL);
+
+require_once './vendor/autoload.php';
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 include './src/config/db_functions.php';
 
