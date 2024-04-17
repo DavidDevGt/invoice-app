@@ -21,7 +21,7 @@ $(document).ready(function () {
         };
 
         $.ajax({
-            url: "ajax.php",
+            url: "./ajax.php",
             type: "POST",
             data: dataObj,
             dataType: "json",
@@ -30,7 +30,7 @@ $(document).ready(function () {
                     localStorage.setItem('jwt', data.token);
                     localStorage.setItem('username', data.username);
                     setAuthToken();
-                    window.location.href = "src/modules/usuario/index.php";
+                    window.location.href = "./src/modules/usuario/index.php";
                 } else {
                     Swal.fire({
                         icon: "error",
