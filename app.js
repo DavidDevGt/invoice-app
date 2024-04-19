@@ -7,7 +7,7 @@ $(document).ready(function () {
     });
 
     document.addEventListener('keydown', function(e) {
-        console.log("Tecla presionada:", e.key); // Imprimimos la tecla presionada en la consola
+        // console.log("Tecla presionada:", e.key);
         
         if (e.key === "Enter" && (document.activeElement === document.getElementById('username') || document.activeElement === document.getElementById('password'))) {
             e.preventDefault();

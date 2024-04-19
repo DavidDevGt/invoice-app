@@ -21,9 +21,9 @@ require_once "./../../config/db_functions.php"; ?>
 
         <!-- Collapsible wrapper -->
         <div class="collapse navbar-collapse" id="navbarLeftAlignExample">
-<!-- Left links -->
-<ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
-<?php
+            <!-- Left links -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
+                <?php
                 $usuarioId = $_COOKIE['user_id'] ?? null;
                 if (!$usuarioId) {
                     error_log("ID de usuario no encontrado en la sesión.");
@@ -80,66 +80,70 @@ require_once "./../../config/db_functions.php"; ?>
             <!-- End Left links -->
 
         </div>
+        <!-- Right elements -->
+        <div class="d-flex align-items-center">
 
+            <!-- Notifications -->
+            <div class="dropdown">
+                <a class="link-secondary me-3 hidden-arrow" href="#" id="navbarDropdownMenuLink" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bell text-white m-1 dropdown-toggle"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-notifications"
+                    aria-labelledby="navbarDropdownMenuLink">
+                    <li><a class="dropdown-item" href="#">Pedido No. 3005 retenido por X días</a>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Factura Firmada No. 25340</a>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Usuario2 cambio su estado a Almuerzo</a>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Pedido No. 3005 retenido por X días</a>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Factura Firmada No. 25340</a>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Usuario2 cambio su estado a Almuerzo</a>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Pedido No. 3005 retenido por X días</a>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Factura Firmada No. 25340</a>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Usuario2 cambio su estado a Almuerzo</a>
+                        <hr class="dropdown-divider">
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Avatar -->
+            <div class="dropdown">
+                <a class="dropdown-toggle d-flex text-white align-items-center hidden-arrow" href="#"
+                    id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://picsum.photos/200" class="rounded-circle" height="25"
+                        alt="Retrato en blanco y negro de un hombre" loading="lazy">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
+                    <li><a class="dropdown-item" href="#">Mi perfil</a></li>
+                    <li><a class="dropdown-item" href="#">Configuración</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Right elements -->
+
+        <div class="m-2">
+            <button class="btn btn-sm btn-danger" style="margin-left: 0.8rem;" onclick="logout()">Cerrar Sesion</button>
+        </div>
     </div>
     <!-- Collapsible wrapper -->
 
-    <!-- Right elements -->
-    <div class="d-flex align-items-center">
 
-        <!-- Notifications -->
-        <div class="dropdown">
-            <a class="link-secondary me-3 hidden-arrow" href="#" id="navbarDropdownMenuLink" role="button"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-bell text-white dropdown-toggle"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end dropdown-notifications" aria-labelledby="navbarDropdownMenuLink">
-                <li><a class="dropdown-item" href="#">Pedido No. 3005 retenido por X días</a>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Factura Firmada No. 25340</a>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Usuario2 cambio su estado a Almuerzo</a>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Pedido No. 3005 retenido por X días</a>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Factura Firmada No. 25340</a>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Usuario2 cambio su estado a Almuerzo</a>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Pedido No. 3005 retenido por X días</a>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Factura Firmada No. 25340</a>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Usuario2 cambio su estado a Almuerzo</a>
-                    <hr class="dropdown-divider">
-                </li>
-            </ul>
-        </div>
 
-        <!-- Avatar -->
-        <div class="dropdown">
-            <a class="dropdown-toggle d-flex text-white align-items-center hidden-arrow" href="#"
-                id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://picsum.photos/200" class="rounded-circle" height="25"
-                    alt="Retrato en blanco y negro de un hombre" loading="lazy">
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
-                <li><a class="dropdown-item" href="#">Mi perfil</a></li>
-                <li><a class="dropdown-item" href="#">Configuración</a></li>
-                <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
-            </ul>
-        </div>
-    </div>
-    <!-- Right elements -->
-    <div class="m-2"></div>
     </div>
     <!-- Container wrapper -->
 </nav>

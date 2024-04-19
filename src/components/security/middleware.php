@@ -3,8 +3,9 @@ require_once './../../../vendor/autoload.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-$key = "]ymHeM;}]\yG;-6TKA@p.:i8SHrlR-:PTXmRFfPPb";
+header('Content-Type: application/json');
 
+$key = "]ymHeM;}]\yG;-6TKA@p.:i8SHrlR-:PTXmRFfPPb";
 $headers = getallheaders();
 $token = $headers['Authorization'] ?? '';
 

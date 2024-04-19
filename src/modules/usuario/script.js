@@ -200,7 +200,9 @@ function cargarSubmodulos(moduloPadreId, usuarioId) {
     }
 }
 
-// Función para seleccionar o deseleccionar ambos permisos
+// Definir la variable permisos antes de usar la función seleccionarAmbos
+var permisos = {};
+
 function seleccionarAmbos(submoduloId) {
     const lecturaCheck = $(`#lectura-${submoduloId}`);
     const escrituraCheck = $(`#escritura-${submoduloId}`);
@@ -215,6 +217,7 @@ function seleccionarAmbos(submoduloId) {
         permisos[submoduloId]['escritura'] = ambosCheck ? 1 : 0;
     }
 }
+
 
 
 function guardarCambiosPermisos() {

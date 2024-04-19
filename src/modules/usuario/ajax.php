@@ -4,7 +4,7 @@
 // error_reporting(E_ALL);
 
 require_once "./../../config/db_functions.php";
-require_once './../../components/security/ajax_middleware.php';
+
 
 $accion = $_POST['accion'] ?? $_GET['accion'] ?? '';
 
