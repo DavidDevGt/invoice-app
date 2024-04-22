@@ -1,0 +1,40 @@
+FROM ubuntu:latest
+
+# Actualizar e instalar dependencias necesarias
+RUN apt-get update && \
+    apt-get install -y software-properties-common curl unzip
+
+# Agregar repositorio de PHP y actualizar
+RUN add-apt-repository ppa:ondrej/php && \
+    apt-get update
+
+# Instalar PHP y extensiones necesarias
+RUN apt-get install -y nginx php8.1-fpm php8.1-mysql php8.1-xml php8.1-gd php8.1-zip
+
+# Instalar Composer globalmente
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Verificar que Composer está instalado
+RUN composer --version
+
+# Remover la configuración por defecto de Nginx y configurar la nueva
+RUN rm /etc/nginx/sites-enabled/default
+COPY ./docker/nginx/default.conf /etc/nginx/sites-available/default
+RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+# Copiar el código fuente
+COPY . /var/www/html
+
+# Cambiar permisos y propietario del directorio de la aplicación
+RUN chown -R www-data:www-data /var/www/html && \
+    chmod -R 755 /var/www/html
+
+# Instalar dependencias de PHP con Composer
+WORKDIR /var/www/html
+RUN composer install --no-dev
+
+# Exponer el puerto 80
+EXPOSE 80
+
+# Comando para iniciar PHP-FPM y Nginx
+CMD service php8.1-fpm start && nginx -g 'daemon off;'

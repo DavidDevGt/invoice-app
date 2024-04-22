@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-php
+    ports:
+      - "8081:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-mysql
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./src/config/db.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1Abc23**
+      MYSQL_DATABASE: invoice_app_db
+
+volumes:
+  db_data:
