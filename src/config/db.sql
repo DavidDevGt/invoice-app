@@ -183,7 +183,7 @@ CREATE TABLE proveedores (
     telefono2 VARCHAR(45),
     correo1 VARCHAR(255),
     correo2 VARCHAR(255),
-    nombre_contacto VAR CHAR(255),
+    nombre_contacto VARCHAR(255),
     telefono_contacto VARCHAR(45),
     dias_credito INT NOT NULL DEFAULT 0,
     nit VARCHAR(100),
